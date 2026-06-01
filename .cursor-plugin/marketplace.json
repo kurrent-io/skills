@@ -1,0 +1,20 @@
+{
+  "name": "kurrent-skills",
+  "owner": {
+    "name": "Kurrent Inc",
+    "email": "info@kurrent.io",
+    "url": "https://www.kurrent.io"
+  },
+  "metadata": {
+    "description": "Pre-built skills that allows you to build, connect, debug and operate applications with Kurrent, plus migration tooling for legacy EventStoreDB clients.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "kurrent",
+      "source": "./plugins/kurrent",
+      "version": "0.1.0",
+      "description": "Pre-built skills and agents for KurrentDB: building and operating apps with the current client SDKs, running the self-hosted server, deploying on Kurrent Cloud, and migrating off legacy EventStoreDB clients (TCP, esdb:// rebrand, smoke tests)."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+description: "Quality eval (A/B baseline vs skill-loaded) for the kurrent plugin"
+
+providers:
+  - id: anthropic:messages:claude-haiku-4-5-20251001
+    label: baseline
+  - id: file://./providers/skill-agent.cjs
+    label: with-skill
+    config:
+      api: anthropic
+      model: claude-haiku-4-5-20251001
+
+evaluateOptions:
+  rubricProvider: deepseek:deepseek-v4-flash
+
+prompts:
+  - file://./prompts/baseline.cjs
+
+tests: file://./cases/*.yaml

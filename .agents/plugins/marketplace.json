@@ -1,0 +1,21 @@
+{
+  "name": "kurrent-skills",
+  "interface": {
+    "displayName": "Kurrent Skills"
+  },
+  "plugins": [
+    {
+      "name": "kurrent",
+      "description": "Pre-built skills and agents for KurrentDB: building and operating apps with the current client SDKs, running the self-hosted server, deploying on Kurrent Cloud, and migrating off legacy EventStoreDB clients (TCP, esdb:// rebrand, smoke tests).",
+      "source": {
+        "source": "local",
+        "path": "./plugins/kurrent"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Databases"
+    }
+  ]
+}

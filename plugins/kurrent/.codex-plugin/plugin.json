@@ -1,0 +1,43 @@
+{
+    "name": "kurrent",
+    "version": "0.1.0",
+    "description": "Pre-built skills and agents that allow you to build, connect, debug and operate applications with Kurrent, including migration tooling for legacy EventStoreDB clients",
+    "author": {
+      "name": "Kurrent Inc",
+      "email": "info@kurrent.io",
+      "url": "https://www.kurrent.io"
+    },
+    "homepage": "https://kurrent.io",
+    "repository": "https://github.com/kurrent-io/skills",
+    "license": "Apache-2.0",
+    "keywords": [
+      "kurrentdb",
+      "database",
+      "migration",
+      "upgrade",
+      "esdb",
+      "eventstoredb"
+    ],
+    "skills": "./skills",
+    "interface": {
+        "displayName": "Kurrent",
+        "shortDescription": "Kurrent agent plugin with skills and MCP servers",
+        "longDescription": "Pre-built skills and agents that allow you to build, connect, debug and operate applications with Kurrent, including migration tooling for legacy EventStoreDB clients",
+        "developerName": "Kurrent Inc",
+        "category": "Databases",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://www.kurrent.io",
+        "privacyPolicyURL": "https://www.kurrent.io/privacy-policy",
+        "defaultPrompt": [
+            "Connect to KurrentDB from my app and append a first event",
+            "Set up a catch-up subscription to $all with a checkpoint",
+            "Diagnose why my client can't reach the KurrentDB cluster",
+            "Deploy a KurrentDB cluster on Kurrent Cloud using the esc CLI",
+            "Configure a connector to write events into Kafka",
+            "Migrate off the legacy TCP EventStoreConnection client",
+            "Audit a KurrentDB client migration"
+        ],
+        "logo": "./assets/KurrentLogo-Plum.png",
+        "brandColor": "#631B3A"
+    }
+}

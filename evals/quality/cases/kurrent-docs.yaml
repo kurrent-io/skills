@@ -1,0 +1,134 @@
+- description: "[client-sdks] Uses the modern gRPC client, not the legacy TCP client"
+  vars:
+    skill: kurrent-docs
+    message: "How do I connect a new .NET application to KurrentDB?"
+  assert:
+    - type: llm-rubric
+      value: "Uses the modern gRPC client (`KurrentDB.Client`) with a `kurrentdb://` or `esdb://` connection string. Does NOT recommend the legacy TCP `EventStoreConnection` API."
+
+- description: "[client-sdks] Recommends optimistic concurrency on appends"
+  vars:
+    skill: kurrent-docs
+    message: "How should I append events to an aggregate's stream in C#?"
+  assert:
+    - type: llm-rubric
+      value: "Demonstrates `AppendToStreamAsync` with an expected stream state for optimistic concurrency: either a numeric expected revision (the last-seen `EventNumber` / `StreamRevision`) passed as the second argument, or `StreamState.NoStream` / `StreamState.StreamExists` where appropriate. Does NOT silently default to `StreamState.Any` without explaining the trade-off."
+
+- description: "[client-sdks] Provides a complete, compilable code example"
+  vars:
+    skill: kurrent-docs
+    message: "Show me how to append a single event to a stream in Java."
+  assert:
+    - type: llm-rubric
+      value: >-
+        Includes the package imports needed to compile the snippet: the
+        `io.kurrent.dbclient.*` types (e.g. `KurrentDBClient`,
+        `KurrentDBConnectionString`, `EventData`) plus `java.util.UUID`.
+        Uses the modern `io.kurrent.dbclient` namespace, NOT the legacy
+        `com.eventstore.dbclient`.
+    - type: llm-rubric
+      value: >-
+        Constructs the client from a connection string, e.g.
+        `KurrentDBConnectionString.parseOrThrow("kurrentdb://...")` followed by
+        `KurrentDBClient.create(settings)`. The `client` variable used in the
+        append call must actually be created in the snippet, not assumed to
+        exist.
+    - type: llm-rubric
+      value: >-
+        Builds the event via `EventData.builderAsJson(...)` and appends it with
+        an `appendToStream` call that is awaited with `.get()` (or otherwise
+        resolves the returned `CompletableFuture`).
+    - type: llm-rubric
+      value: >-
+        Is fully self-contained and copy-pasteable, not pseudo-code or a partial
+        fragment. Any event payload type referenced (e.g. `OrderPlaced`) is
+        defined inline with the getters required for JSON serialization, never
+        referenced as an undefined class.
+
+- description: "[client-sdks] Catch-up subscription with checkpointing guidance"
+  vars:
+    skill: kurrent-docs
+    message: "How do I subscribe to all events in KurrentDB from a Node.js worker and survive restarts?"
+  assert:
+    - type: llm-rubric
+      value: "Uses `subscribeToAll` (catch-up subscription) and explains storing the last processed `Position` / commit position as a checkpoint, then resuming from that position on restart. Mentions reconnection handling."
+
+- description: "[client-sdks] Persistent vs catch-up subscription distinction"
+  vars:
+    skill: kurrent-docs
+    message: "I need multiple workers to share the load processing events from a stream. Which subscription type?"
+  assert:
+    - type: llm-rubric
+      value: "Recommends persistent subscriptions (server-managed consumer groups, ack/nack, competing consumers) instead of catch-up subscriptions. Mentions consumer strategies such as round-robin or pinned."
+
+- description: "[client-sdks] Connection string + TLS guidance"
+  vars:
+    skill: kurrent-docs
+    message: "What does a secure KurrentDB connection string look like, and how do I configure it from Go?"
+  assert:
+    - type: llm-rubric
+      value: "Shows a `kurrentdb://` (or `esdb://`) URI with `tls=true` and explains certificate trust / `tlsVerifyCert` options. Mentions `tls=false` is only for local/insecure clusters."
+
+- description: "[client-sdks] Soft delete vs tombstone distinction"
+  vars:
+    skill: kurrent-docs
+    message: "What's the difference between deleting and tombstoning a stream?"
+  assert:
+    - type: llm-rubric
+      value: "Explains soft delete (stream is gone but can be re-appended to) vs tombstone / hard delete (stream is permanently sealed; further appends fail). Mentions impact on subscribers."
+
+- description: "[client-sdks] OpenTelemetry tracing guidance"
+  vars:
+    skill: kurrent-docs
+    message: "How do I get distributed traces from my .NET KurrentDB client?"
+  assert:
+    - type: llm-rubric
+      value: "Recommends the client's built-in OpenTelemetry integration: install the `KurrentDB.Client.Extensions.OpenTelemetry` (or `OpenTelemetry.Exporter.*`) packages and call `AddKurrentDBClientInstrumentation()` on the `TracerProvider`. Configures at least one exporter (Console, Jaeger, or OTLP). Mentions that append and subscription operations are the traced operations."
+
+- description: "[database] Prometheus metrics endpoint and metric naming"
+  vars:
+    skill: kurrent-docs
+    message: "How do I scrape metrics from my self-hosted KurrentDB cluster with Prometheus?"
+  assert:
+    - type: llm-rubric
+      value: "Points at the `/metrics` endpoint exposed by each node in Prometheus text format. Uses the modern `kurrentdb_*` metric name prefix and does NOT recommend the legacy `eventstore_*` names. Mentions OpenTelemetry/OTLP export as an alternative is acceptable but not required."
+
+- description: "[database] Scavenge triggered via HTTP API"
+  vars:
+    skill: kurrent-docs
+    message: "How do I run a scavenge on a self-hosted KurrentDB node to reclaim disk after deleting streams?"
+  assert:
+    - type: llm-rubric
+      value: "Explains scavenge as a per-node operation that rewrites chunks to remove deleted/expired events. Shows triggering it via an empty `POST` to the HTTP admin scavenge endpoint (or via the Admin UI) authenticated as an `admin` or `ops` user. Warns that scavenge is destructive and that each node in a cluster must be scavenged independently (or references auto-scavenge for cluster-wide scheduling)."
+
+- description: "[database] Per-stream ACLs stored in stream metadata"
+  vars:
+    skill: kurrent-docs
+    message: "How do I restrict who can read or write a stream on my self-hosted KurrentDB cluster?"
+  assert:
+    - type: llm-rubric
+      value: "Explains per-stream ACLs stored in stream metadata with read / write / meta-read / meta-write / delete roles. References the built-in `$admins` group as bypassing ACL checks and mentions the default ACL (stored on `$settings`) applied to streams without an explicit one."
+
+- description: "[database] Server-side connectors for outbound pipelines"
+  vars:
+    skill: kurrent-docs
+    message: "I want to forward every event written to KurrentDB into a Kafka topic, server-side. How?"
+  assert:
+    - type: llm-rubric
+      value: "Recommends the built-in server-managed Kafka sink connector (configured per stream/filter, server-side), NOT a custom client-SDK subscription that bridges into Kafka from application code. Mentions configuration via the connectors API/UI."
+
+- description: "[cloud] Modern Terraform provider, not the deprecated one"
+  vars:
+    skill: kurrent-docs
+    message: "How do I provision a Kurrent Cloud cluster with Terraform?"
+  assert:
+    - type: llm-rubric
+      value: "Recommends the `kurrent-io/kurrentcloud` Terraform provider. Does NOT recommend the deprecated `EventStore/eventstorecloud` provider for new code (mentioning it only as the prior name is acceptable)."
+
+- description: "[cloud] Private access via VPC peering"
+  vars:
+    skill: kurrent-docs
+    message: "I'm on Kurrent Cloud and want my AWS app to reach the cluster without going over the public internet."
+  assert:
+    - type: llm-rubric
+      value: "Recommends VPC peering between the customer AWS VPC and the Kurrent Cloud private network, provisioned from the Cloud console or via the Terraform/Pulumi provider. May acknowledge that AWS PrivateLink / GCP Private Service Connect / Azure Private Link are on the roadmap but not yet supported. Does NOT suggest self-hosting or a public-internet workaround as the recommended solution."

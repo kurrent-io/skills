@@ -1,0 +1,6 @@
+resources/cluster/certs
+resources/cluster/logs
+
+node_modules/
+.cache/
+eval/.kev/

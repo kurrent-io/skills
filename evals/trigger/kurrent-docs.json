@@ -1,0 +1,122 @@
+[
+  {
+    "query": "Connect my .NET app to KurrentDB and append a user-registered event",
+    "should_trigger": true,
+    "note": "client-sdks — application code via .NET gRPC client"
+  },
+  {
+    "query": "How do I subscribe to $all from a Node.js service and checkpoint progress?",
+    "should_trigger": true,
+    "note": "client-sdks — Node.js catch-up subscription"
+  },
+  {
+    "query": "Show me a Java example of a persistent subscription with ack/nack",
+    "should_trigger": true,
+    "note": "client-sdks — Java persistent subscription"
+  },
+  {
+    "query": "WrongExpectedVersion exception when appending in Go — what does it mean?",
+    "should_trigger": true,
+    "note": "client-sdks — optimistic concurrency error from the Go client"
+  },
+  {
+    "query": "How do I authenticate to KurrentDB with a user certificate from Rust?",
+    "should_trigger": true,
+    "note": "client-sdks — Rust client authentication"
+  },
+  {
+    "query": "What does a kurrentdb:// connection string look like for a TLS cluster?",
+    "should_trigger": true,
+    "note": "client-sdks — connection string / TLS"
+  },
+  {
+    "query": "Read events backward from a stream in C# starting at the end",
+    "should_trigger": true,
+    "note": "client-sdks — .NET read API"
+  },
+  {
+    "query": "Soft delete vs tombstone a stream from the Node.js client",
+    "should_trigger": true,
+    "note": "client-sdks — stream deletion semantics"
+  },
+  {
+    "query": "Emit OpenTelemetry traces from my Java KurrentDB client and propagate context",
+    "should_trigger": true,
+    "note": "client-sdks — client observability"
+  },
+  {
+    "query": "Create and enable a user-defined projection from my .NET app at startup",
+    "should_trigger": true,
+    "note": "client-sdks — projection management invoked from a client"
+  },
+  {
+    "query": "Migrate my .NET app from EventStoreConnection (TCP) to the new gRPC client",
+    "should_trigger": true,
+    "note": "client-sdks — gRPC SDK is the migration target; the skill also documents the EventStore -> KurrentDB rename"
+  },
+  {
+    "query": "Configure a Kafka sink connector to stream events out of KurrentDB",
+    "should_trigger": true,
+    "note": "database — server-managed connectors live under references/database/features/connectors"
+  },
+  {
+    "query": "Set up TLS, ACLs, and basic auth users on my KurrentDB cluster",
+    "should_trigger": true,
+    "note": "database — references/database/security covers protocol-security, authentication, authorization"
+  },
+  {
+    "query": "Plan a rolling upgrade of my 3-node KurrentDB cluster to the next major version",
+    "should_trigger": true,
+    "note": "database — references/database/quick-start/upgrade-guide.md"
+  },
+  {
+    "query": "How do I scrape Prometheus metrics from my self-hosted KurrentDB nodes?",
+    "should_trigger": true,
+    "note": "database — /metrics endpoint with kurrentdb_* naming"
+  },
+  {
+    "query": "Run a scavenge on my KurrentDB nodes to reclaim disk after deleting streams",
+    "should_trigger": true,
+    "note": "database — references/database/operations/scavenge.md"
+  },
+  {
+    "query": "Provision a Kurrent Cloud cluster with VPC peering on AWS",
+    "should_trigger": true,
+    "note": "cloud — references/cloud/getting-started/private-access/aws.md"
+  },
+  {
+    "query": "Use Terraform to manage Kurrent Cloud clusters and networks",
+    "should_trigger": true,
+    "note": "cloud — references/cloud/automation/terraform.md (kurrent-io/kurrentcloud provider)"
+  },
+  {
+    "query": "Connect a Tailscale-managed workload to my Kurrent Cloud cluster",
+    "should_trigger": true,
+    "note": "cloud — references/cloud/guides/tailscale.md"
+  },
+  {
+    "query": "Write a Python script that parses CSV files into a pandas DataFrame",
+    "should_trigger": false,
+    "note": "out of scope — no KurrentDB involvement, generic Python data wrangling"
+  },
+  {
+    "query": "Build a React form with client-side validation",
+    "should_trigger": false,
+    "note": "out of scope — frontend UI unrelated to KurrentDB"
+  },
+  {
+    "query": "Tune PostgreSQL autovacuum on a high-write workload",
+    "should_trigger": false,
+    "note": "out of scope — different database"
+  },
+  {
+    "query": "Configure log.segment.bytes and compaction on a standalone Apache Kafka broker",
+    "should_trigger": false,
+    "note": "out of scope — Kafka broker tuning unrelated to KurrentDB (the connector skill scope is KurrentDB-side config)"
+  },
+  {
+    "query": "Explain the CQRS pattern and when to use it",
+    "should_trigger": false,
+    "note": "out of scope — generic architectural pattern with no KurrentDB-specific question"
+  }
+]

@@ -1,0 +1,89 @@
+{
+  "$schema": "./manifest.schema.json",
+  "exclusions": [
+    "**/README.md",
+    "**/cloud/tutorials.md"
+  ],
+  "upstreams": [
+    {
+      "repository": "kurrent-io/KurrentDB",
+      "revision": "master",
+      "mappings": [
+        {
+          "pattern": "docs/server/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/database"
+        }
+      ]
+    },
+    {
+      "repository": "kurrent-io/documentation",
+      "revision": "master",
+      "mappings": [
+        {
+          "pattern": "docs/cloud/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/cloud"
+        }
+      ]
+    },
+    {
+      "repository": "kurrent-io/KurrentDB-Client-Dotnet",
+      "revision": "master",
+      "mappings": [
+        {
+          "pattern": "docs/api/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/client-sdks/dotnet"
+        }
+      ]
+    },
+    {
+      "repository": "kurrent-io/KurrentDB-Client-Go",
+      "revision": "main",
+      "mappings": [
+        {
+          "pattern": "docs/api/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/client-sdks/go"
+        }
+      ]
+    },
+    {
+      "repository": "kurrent-io/KurrentDB-Client-Java",
+      "revision": "trunk",
+      "mappings": [
+        {
+          "pattern": "docs/api/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/client-sdks/java"
+        }
+      ]
+    },
+    {
+      "repository": "kurrent-io/KurrentDB-Client-NodeJS",
+      "revision": "master",
+      "mappings": [
+        {
+          "pattern": "docs/api/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/client-sdks/nodejs"
+        }
+      ]
+    },
+    {
+      "repository": "kurrent-io/KurrentDB-Client-Rust",
+      "revision": "master",
+      "mappings": [
+        {
+          "pattern": "docs/api/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/client-sdks/rust"
+        }
+      ]
+    },
+    {
+      "repository": "pyeventsourcing/kurrentdbclient",
+      "revision": "1.2",
+      "mappings": [
+        {
+          "pattern": "docs/api/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/client-sdks/python"
+        }
+      ]
+    }
+  ]
+}

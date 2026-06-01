@@ -1,0 +1,54 @@
+name: Bump Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_source:
+        description: "How to determine the next version"
+        required: true
+        default: patch
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - exact
+      exact_version:
+        description: "Exact version (required when version_source=exact), e.g. 1.2.3"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump-version-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Bump plugin versions
+        id: version
+        env:
+          VERSION_SOURCE: ${{ inputs.version_source }}
+          EXACT_VERSION: ${{ inputs.exact_version }}
+        run: |
+          if [[ "$VERSION_SOURCE" == "exact" ]]; then
+            bun .github/scripts/bump-version.js exact "$EXACT_VERSION"
+          else
+            bun .github/scripts/bump-version.js "$VERSION_SOURCE"
+          fi
+
+      - name: Create version bump pull request
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # 8.1.0
+        with:
+          base: main
+          branch: ${{ steps.version.outputs.branch_name }}
+          title: "Bump plugin versions to v${{ steps.version.outputs.target_version }}"
+          commit-message: "Bump plugin versions to v${{ steps.version.outputs.target_version }}"
+          body: |
+            ## Summary
+            - Bump plugin version from `${{ steps.version.outputs.current_version }}` to `${{ steps.version.outputs.target_version }}`

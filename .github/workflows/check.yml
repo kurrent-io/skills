@@ -1,0 +1,45 @@
+name: Sync checks
+
+on:
+  pull_request:
+    paths:
+      - "manifest.json"
+      - "manifest.lock.json"
+      - "skills/**"
+      - ".github/scripts/*.js"
+      - "plugin.json"
+      - ".claude-plugin/*.json"
+      - ".cursor-plugin/*.json"
+      - ".codex-plugin/*.json"
+      - ".github/plugin/marketplace.json"
+      - "package.json"
+      - "bun.lock"
+      - ".github/workflows/check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+
+      - name: Verify plugin versions agree across all manifests
+        run: bun run version:check
+
+      - name: Sync from lockfile (no --update)
+        run: bun .github/scripts/sync-docs.js
+
+      - name: Verify references/ matches committed state
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "::error::Synced files drift from what's committed. The lockfile + manifest.json don't reproduce the references/ tree. Run 'bun .github/scripts/sync-docs.js' locally and commit the result, or run 'bun .github/scripts/sync-docs.js --update' if you intend to bump refs."
+            git status --short
+            echo "----- diff -----"
+            git --no-pager diff
+            exit 1
+          fi
+          echo "Synced output matches committed state."

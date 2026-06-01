@@ -1,0 +1,13 @@
+{
+  "name": "kurrent",
+  "description": "Pre-built skills and agents for KurrentDB: building and operating apps with the current client SDKs, running the self-hosted server, deploying on Kurrent Cloud, and migrating off legacy EventStoreDB clients (TCP, esdb:// rebrand, smoke tests).",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kurrent Inc",
+    "email": "info@kurrent.io"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["kurrentdb", "database", "migration", "upgrade", "esdb", "eventstoredb"],
+  "agents": "agents/",
+  "skills": ["skills/"]
+}

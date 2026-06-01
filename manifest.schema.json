@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kurrent.io/schemas/manifest.schema.json",
+  "title": "Docs Sources Config",
+  "description": "Configuration for .github/scripts/sync-docs.js — upstream markdown documentation synced into plugin skill references/ folders.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["upstreams"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "exclusions": {
+      "type": "array",
+      "description": "Glob patterns excluded from every upstream's scan (e.g. '**/README.md').",
+      "items": { "type": "string" }
+    },
+    "upstreams": {
+      "type": "array",
+      "description": "Upstream (repository, revision) pairs to sync from. Each entry is one checkout.",
+      "items": { "$ref": "#/$defs/upstream" }
+    }
+  },
+  "$defs": {
+    "upstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision", "mappings"],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[^/\\s]+/[^/\\s]+$",
+          "description": "GitHub repository slug (owner/name)."
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Git revision: branch name, tag, or commit SHA. Fetched directly via git (no GitHub API)."
+        },
+        "mappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/mapping" }
+        }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern", "target"],
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Glob pattern (e.g. 'docs/**/*.md') or literal path relative to the upstream repository root."
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Destination directory relative to this repository's root. Matched files land under 'target' with the static prefix of 'pattern' stripped. The destination is wiped before each sync — removing a mapping from manifest.json leaves stale files behind."
+        },
+        "as": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional rename. When set, 'pattern' must match exactly one file, which is written to 'target/as' instead of preserving its source name."
+        }
+      }
+    }
+  }
+}

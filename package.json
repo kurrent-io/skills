@@ -1,0 +1,17 @@
+{
+  "name": "kurrent-skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "bun .github/scripts/sync-docs.js",
+    "sync:update": "bun .github/scripts/sync-docs.js --update",
+    "version:check": "bun .github/scripts/bump-version.js --check",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

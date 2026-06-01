@@ -1,0 +1,19 @@
+{
+  "name": "kurrent-skills",
+  "owner": {
+    "name": "Kurrent Inc",
+    "email": "info@kurrent.io"
+  },
+  "metadata": {
+    "description": "Agent skills and migration tooling for KurrentDB and the legacy EventStoreDB stack. Covers SDK usage, server operations, Kurrent Cloud, the esc CLI, and TCP-to-gRPC client migrations.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "kurrent",
+      "description": "Pre-built skills and agents for KurrentDB: building and operating apps with the current client SDKs, running the self-hosted server, deploying on Kurrent Cloud, and migrating off legacy EventStoreDB clients (TCP, esdb:// rebrand, smoke tests).",
+      "version": "0.1.0",
+      "source": "./plugins/kurrent"
+    }
+  ]
+}
