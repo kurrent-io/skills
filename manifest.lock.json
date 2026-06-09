@@ -1,10 +1,10 @@
 {
-  "kurrent-io/documentation@master": "50d430e999930a8302570fe0be8560bbfd205c88",
+  "kurrent-io/documentation@master": "45cf8d760d8cfc4cb9e9325a22aef67442ce0d8b",
   "kurrent-io/KurrentDB-Client-Dotnet@master": "0407e2817f7d1457631193f6d76263663b4550bf",
   "kurrent-io/KurrentDB-Client-Go@main": "ca63b9362ce90b406fe535a7f768bdb4b7240f7e",
   "kurrent-io/KurrentDB-Client-Java@trunk": "3b3d1416d0e49c3af49ffdef892a99dd72695ec8",
   "kurrent-io/KurrentDB-Client-NodeJS@master": "f20b68fd634aace25f1495c691a0dd99042ec0af",
   "kurrent-io/KurrentDB-Client-Rust@master": "b4c829b86f705a5327290aafe20c8af3d6ba6a60",
   "kurrent-io/KurrentDB@master": "a577931c970b24f9ad3b41cadf9e8076b0626a2d",
-  "pyeventsourcing/kurrentdbclient@1.2": "05ae58ffe64d4ebabe13c991e79db4b32856f5bf"
+  "pyeventsourcing/kurrentdbclient@1.2": "071f28c18f356ce7aff3d0be777472dc1c250648"
 }
