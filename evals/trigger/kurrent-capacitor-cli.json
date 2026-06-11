@@ -1,0 +1,67 @@
+[
+  {
+    "query": "Where does my capacitor config stored at?",
+    "should_trigger": true,
+    "note": "config location — the exact phrasing that missed; config file path is a kurrent-capacitor-cli concern (references/config-privacy.md)"
+  },
+  {
+    "query": "Where is the kcap config file on disk?",
+    "should_trigger": true,
+    "note": "config location — direct ask for the config path"
+  },
+  {
+    "query": "Can I move kcap's config to a different directory?",
+    "should_trigger": true,
+    "note": "config location — KCAP_CONFIG_DIR override"
+  },
+  {
+    "query": "I just ran npm install -g @kurrent/kcap. How do I start recording my Claude Code sessions?",
+    "should_trigger": true,
+    "note": "install/setup — kcap setup onboarding"
+  },
+  {
+    "query": "How do I backfill my old Claude Code sessions into Capacitor?",
+    "should_trigger": true,
+    "note": "import — kcap import scope"
+  },
+  {
+    "query": "kcap's title generation keeps failing and I have ANTHROPIC_API_KEY set globally. Why?",
+    "should_trigger": true,
+    "note": "config/privacy — provider API-key scrubbing in headless calls"
+  },
+  {
+    "query": "How do I run two kcap daemons on the same machine?",
+    "should_trigger": true,
+    "note": "daemon — multiple daemons / flock naming"
+  },
+  {
+    "query": "What's the difference between kcap hide and kcap disable for a session?",
+    "should_trigger": true,
+    "note": "sessions/privacy — hide vs disable semantics"
+  },
+  {
+    "query": "Set up profiles so kcap auto-switches Capacitor server by git remote",
+    "should_trigger": true,
+    "note": "profiles — multi-server auto-switch"
+  },
+  {
+    "query": "Where do I configure KurrentDB's database server settings and connection string?",
+    "should_trigger": false,
+    "note": "DEFER to kurrent-docs — KurrentDB the database, not the kcap CLI; 'config' here is the DB server, not Capacitor"
+  },
+  {
+    "query": "Connect my .NET app to KurrentDB and append a user-registered event",
+    "should_trigger": false,
+    "note": "DEFER to kurrent-docs — KurrentDB client SDK usage"
+  },
+  {
+    "query": "Migrate my .NET app from EventStoreConnection (TCP) to the gRPC KurrentDB client",
+    "should_trigger": false,
+    "note": "DEFER to kurrent-upgrade — client-SDK migration, not the kcap CLI"
+  },
+  {
+    "query": "What does a kurrentdb:// connection string look like for a TLS cluster?",
+    "should_trigger": false,
+    "note": "DEFER to kurrent-docs — KurrentDB connection string, unrelated to kcap"
+  }
+]

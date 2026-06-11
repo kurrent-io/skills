@@ -157,6 +157,25 @@ Use consistent header patterns inside `SKILL.md`:
 - `## Quick Reference` — common patterns / commands
 - `## Additional Resources` — closes the skill; under a `### Reference Files` sub-heading, a bullet list of `**`references/x.md`** - one-line description` entries pointing into `references/`. Follow Claude Code's convention here; do not use a `## Files` table.
 
+## Authoring Discipline
+
+Structure is above; this is content quality. A skill is a prompt the agent paraphrases, not a doc the user reads — anything in a `references/` body can land in the answer verbatim. Content-review pass before PR.
+
+**Rules:**
+
+- **R1 — Section ownership.** A section says only what answers its own question. Incidental facts (sibling filenames, "also holds…" inventories, asides) → fold in generically or move to the reference that owns them; else the agent recites them as noise.
+- **R2 — Guidance ≠ fact.** Agent-directed prose in a `references/` body gets relayed as fact to a user who never asked. Negations/warnings ("not `~/.foo`", "don't guess", "must not claim X") → the **eval rubric** (assert the output), not the prose. Agent instructions ("copy names from references, don't reconstruct") OK in `SKILL.md` body only.
+- **R3 — Descriptions: categories, not queries.** A legit question not triggering = a missing *capability category* in `description:`, not a missing keyword. Add the category at peer altitude (`profiles`, `daemon`, `import`…). Never paste the failing query; never embed paths/flags/error strings as bait (those live in `references/`). Echoing the missed query is a band-aid — next phrasing misses too.
+- **R4 — Every content change ships a generalizing eval.** Body/`references/` → **quality** case; `description:` → **trigger** cases (axes + re-run matrix in Evals). Trigger positives = *varied* phrasings, never the verbatim fix query; include negatives guarding sibling + name collisions (Kurrent vs Ionic Capacitor; kcap config vs KurrentDB server config). Passing only the wording you fixed tests the band-aid.
+- **R5 — Verify the rendered answer, not the diff.** File changed ≠ behaviour changed. Load the skill, ask the real question, read the output — R1/R2 leaks surface only there.
+
+**Diagnostics:**
+
+- *Query doesn't trigger* → in scope? Yes → category in `description:`? No → add it (R3); exists but still misses → name collision, strengthen the product name + add negative cases (no keyword-stuffing). Out of scope → sibling's job: sharpen `Do NOT use for…` + add a negative case.
+- *Answer has unasked-for content* → find its source text. Doesn't answer the section's question → leak (R1), cut or relocate. Guidance-as-fact (negation/warning/"don't") → constraint to rubric (R2), state positively.
+
+**Checklist (atop the sync/structure gates):** no incidental facts / guidance-as-fact in touched `references/` (R1, R2); new/changed `description:` adds a category, not a query/path (R3); quality and/or trigger eval added (R4); real question re-run, rendered answer read (R5).
+
 ## Reference Docs Are Synced From Upstream
 
 Most files under `plugins/kurrent/skills/*/references/` are pulled from upstream Kurrent repositories (KurrentDB, the client SDKs, documentation). They carry a `synced from <repo>@<sha>` header comment.

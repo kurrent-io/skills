@@ -1,0 +1,311 @@
+- description: "[install] npm 11+ install-scripts gating, approve-scripts does not reliably apply to global installs"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "I ran `npm install -g @kurrent/kcap` and npm warned that the package has install scripts not yet covered by allowScripts. It suggested `npm approve-scripts @kurrent/kcap`. How do I actually fix this?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Explains that npm now gates lifecycle scripts via allow-scripts policy and
+        that global installs may require explicit opt-in. States that
+        `npm approve-scripts @kurrent/kcap` may not resolve global installs in
+        some npm versions because approval is not consistently applied in global
+        install context. Does NOT assert a specific npm bug code like EGLOBAL.
+
+    - type: llm-rubric
+      value: >-
+        Provides the correct fixes: either one-off
+        `npm install -g @kurrent/kcap --allow-scripts=@kurrent/kcap`, or persistent
+        config via `allow-scripts[]=@kurrent/kcap` in `~/.npmrc`.
+
+    - type: llm-rubric
+      value: >-
+        Conveys that the `postinstall` script is non-essential: the `kcap` CLI works
+        regardless of whether it runs. May additionally explain that the native binary
+        ships as a platform-specific optional dependency (not via postinstall), that
+        the script only refreshes user-scope agent integrations and is gated by
+        `--if-installed`, or that users can run `kcap plugin install ... --if-installed`
+        manually, but those mechanics are optional and their absence is not a failure.
+        Does NOT recommend unrelated fixes such as cache resets, fixing file
+        permissions, or `sudo`; naming any of those only to dismiss them as NOT the
+        cause is acceptable and not a failure.
+
+- description: "[setup] First-time recording flow end to end"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "I just installed the kcap CLI. What do I run to start recording my Claude Code sessions, and how do I confirm it worked?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Directs the user to run `kcap setup` (the interactive wizard) and describes
+        the steps it covers: entering the server URL (provided by their admin),
+        logging in with GitHub, choosing default visibility, and installing
+        coding-agent hooks. The default GitHub login is browser-based OAuth (localhost
+        callback + PKCE); Device Flow is only the fallback for headless/SSH
+        environments or when `--device` is passed, so an answer that says login opens
+        a browser by default is CORRECT and must not be penalized, and an answer that
+        claims Device Flow is the default is wrong. Mentions verifying with
+        `kcap whoami` and/or `kcap status`. Does NOT invent commands like `kcap init`,
+        `kcap start`, or a config file the user must hand-write.
+    - type: llm-rubric
+      value: >-
+        Notes that recording only happens once a supported coding agent (Claude Code,
+        Codex CLI, or Cursor) is installed and its hooks are in place. Setup alone,
+        which just detects agents and writes hook registrations, captures nothing. The
+        hook firing when the agent runs is the only trigger, so there is no recording
+        without a supported agent. Accepts (does not penalize) answers that mention
+        only Claude Code and/or Codex, but treats naming Codex CLI as the sole second
+        agent (omitting Cursor) as incomplete rather than correct. Does not require the
+        phrase "on PATH": detection is PATH-based for Claude and Codex but
+        directory-based for Cursor, so an answer that hinges recording solely on an
+        agent being "on PATH" is imprecise.
+
+- description: "[setup] Non-interactive setup, Claude hooks only"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "How do I run kcap setup in CI with no prompts, installing only the Claude Code hooks and skipping Codex and Cursor?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Shows `kcap setup --server-url <url> --no-prompt` and explains that
+        `--no-prompt` installs hooks for EVERY detected agent by default, so you must
+        opt out of the others with `--skip-codex-hooks` and `--skip-cursor-hooks` to
+        get Claude-only. Uses these exact opt-out flags (not invented ones like
+        `--only-claude` or `--agents=claude`).
+
+- description: "[import] Backfilling past sessions requires an explicit scope"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "I've set up kcap. How do I load my existing past Claude Code sessions into the dashboard?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Recommends `kcap import` and makes clear an explicit scope is REQUIRED
+        (`--all`, `--org`, or `--repo owner/repo`) so private/personal repos aren't
+        uploaded by accident (running with no scope on a TTY gives a picker). States
+        the command is idempotent / resumable (safe to re-run). Does not present a
+        scopeless `kcap import` as the normal path.
+    - type: llm-rubric
+      value: >-
+        If it explains `--org`, it conveys that `--org` filters to sessions whose repo
+        owner matches the active profile (the profile name is used as the GitHub org
+        login). Equivalent phrasings such as "repos owned by your profile's org" are
+        acceptable and must not be penalized for not using the exact words "profile
+        name". May additionally note that this works out of the box for tenant-bound
+        profiles created by `kcap setup`, and that non-interactive/CI runs must pass
+        both a scope and `--yes` (or `-y`), but those details are optional and their
+        absence is not a failure. Does not claim `--org` auto-detects the org from git
+        or uploads everything.
+
+- description: "[profiles] Multiple servers, auto-switch by git remote"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "I want kcap to use my company's Capacitor server for work repos and a different server for my open-source repos, switching automatically. How?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Uses kcap profiles: `kcap profile add <name> --server-url <url>` with a
+        `--remote "github.com/org/*"` pattern, and explains that opening a repo whose
+        git remote matches a pattern activates that profile automatically. If it
+        describes the wildcard, the `*` is slash-bounded (matches one path segment),
+        so `github.com/org/*` matches `github.com/org/repo` but not
+        `github.com/org-labs/repo` or a deeper path; does not claim `*` spans `/`. May
+        also mention `kcap use <name>` to bind a profile (with `--global` for the
+        default or `--save` to write a shareable `.kcap.json`). Does not invent
+        per-repo env vars or a single global config the user must edit by hand.
+
+- description: "[eval] LLM-as-judge session scoring"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "Can kcap score how well an agent did in a recorded session? What does it actually measure?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Points to `kcap eval <sessionId>` and describes it as an LLM-as-judge that
+        scores the session across categories such as safety, plan adherence, quality,
+        and efficiency, with each question answered by a separate headless Claude
+        judge. Describes the default judge as text-only, reasoning from the compacted
+        session trace embedded in its prompt rather than from live tools. Does not need
+        to mention that a few server-tagged questions instead get a read-only MCP tool
+        surface to fetch context on demand, but if it does, that is correct and must
+        not be penalized; conversely, an answer that asserts EVERY judge has no tools
+        is acceptable simplification, not a hard error. Mentions per-category + overall
+        1-5 scores with pass/warn/fail verdicts.
+    - type: llm-rubric
+      value: >-
+        Mentions at least one real flag: `--model opus` for a stronger judge,
+        `--chain` to include the continuation chain, `--questions <category>` to run a
+        subset, `--skip <category>`, or `--list-questions`. Does not fabricate flags
+        like `--score`, `--rubric`, or `--output json` that aren't part of the command.
+
+- description: "[recap] Summarizing a past session and its continuation chain"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "How do I get a summary of what happened in an earlier kcap session, including the sessions it was continued into?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Uses `kcap recap <sessionId>` and explains the default is a concise
+        AI-generated summary, `--full` gives the complete transcript, and `--chain`
+        spans the whole continuation chain (combinable: `--chain --full`). May note
+        the identifier can be a session GUID or a meta-session slug. Does not invent a
+        `kcap summary` / `kcap history` command or unrelated flags.
+
+- description: "[config] Headless calls scrub provider API keys by default"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "kcap's automatic title generation and summaries keep failing. I have ANTHROPIC_API_KEY set globally in my shell. Is that related, and how does kcap handle API keys for its background calls?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Explains that kcap's headless calls (title generation, summaries, judges)
+        shell out to `claude -p` / `codex exec`, and that by DEFAULT kcap SCRUBS
+        `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` from those spawns so the user's
+        subscription login (claude.ai / ChatGPT account) is used, since a globally-set
+        key would otherwise override subscription auth and fail the call. Identifies the
+        global key as the likely culprit only in the sense that kcap intentionally
+        strips it.
+    - type: llm-rubric
+      value: >-
+        Tells a user who genuinely authenticates via API key (PAYG) to opt back in
+        with `kcap config set use_provider_api_key true` (or a one-off
+        `KCAP_USE_PROVIDER_API_KEY=1`). Does not advise simply unsetting the key as
+        the only fix, nor invent a different config key name.
+
+- description: "[daemon] Backgrounding and running multiple daemons on one machine"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "How do I run the kcap daemon in the background, and can I run two daemons on the same machine at once?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Shows `kcap daemon start -d` to run detached/in the background, and explains
+        that a second daemon on the same machine needs a UNIQUE `--name` (e.g. `kcap
+        daemon start --name laptop -d`). States that two daemons under the same name
+        collide on a flock (`~/.config/kcap/daemons/<name>.lock`) and the second one
+        exits. May mention `kcap daemon status` / `stop` / `doctor`. Does not invent
+        `--port`, `--instance`, or a config-file-only approach.
+
+- description: "[remap] Recovering sessions from a renamed directory"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "I renamed a project folder on disk (e.g. ~/dev/foo-cli to ~/dev/bar-cli). Now `kcap import --org` silently drops those old sessions. How do I get them back?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Uses `kcap remap <old-path> <new-path>` to register the path rewrite and says
+        to re-run the import afterward. Explains the rewrite is path-PREFIX based
+        (matching on a path boundary, so `~/dev/foo` won't rewrite `~/dev/foo-cli`).
+        May additionally mention `--list` / `--remove <path>` management, that `~`
+        expands to home, that the mappings live under `cwd_remap` in
+        `~/.config/kcap/config.json`, or that remaps are global, but those extra
+        details are optional and their absence is not a failure. Does not suggest
+        re-importing from scratch or hand-editing each session.
+
+- description: "[config] Excluding a repo or directory from recording"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "How do I make sure kcap never records sessions for one sensitive repo, or for a particular scratch directory on my machine?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Distinguishes the two mechanisms: `kcap config set excluded_repos
+        "owner/repo,..."` to exclude by git remote, and `kcap ignore <path>` (with
+        `kcap ignore --list` / `--remove <path>`) to exclude by working-directory
+        path regardless of remote. States that matching sessions are silently skipped
+        so hooks fire no data and nothing is recorded. May note that both lists are
+        stored per-profile on the active profile (`excluded_paths` and
+        `excluded_repos` live inside the profile, not at top level); if it claims
+        `excluded_repos` is global it is wrong. Does not invent a `.kcapignore` file or
+        a `--exclude` flag on every command.
+
+- description: "[mcp] Letting an agent search past sessions mid-chat"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "Can my coding agent search and recall my past kcap sessions while I'm chatting with it, without me leaving the conversation?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Identifies the `kcap mcp sessions` stdio MCP server and says the Kurrent
+        Capacitor plugin auto-registers it (so there's nothing manual to add after
+        `kcap setup`). May note this covers both Claude Code and Codex, and that it is
+        repo-aware (defaults searches to the current repo), but those details are
+        optional. Mentions it exposes tools to search sessions and fetch a session
+        summary / transcript (e.g. `search_sessions`, `get_session_summary`,
+        `get_session_transcript`). Does not tell the user they must write their own MCP
+        config from scratch or claim no such capability exists. Referencing
+        `claude mcp add` only as something NOT needed (because it is auto-registered)
+        is acceptable and not a failure.
+
+- description: "[hide-vs-disable] Owner-only visibility vs deleting server data"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "What's the difference between `kcap hide` and `kcap disable` for a session?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Explains `kcap hide` marks a session owner-only (it stays recorded; other
+        users just stop seeing it in the dashboard), whereas `kcap disable` stops the
+        watcher, silences future hooks, AND deletes the server-side data for the
+        session, which is irreversible on the server side, though the local transcript file is
+        left untouched. May note that disable performs the destructive server delete
+        immediately with no confirmation prompt; if it claims disable asks for
+        confirmation before deleting, that is wrong. May note both default to the
+        current session and accept an optional `<sessionId>`. Does not conflate the two
+        or claim either edits the local transcript.
+
+- description: "[upgrade] v1 config crash from server_url missing scheme"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "After upgrading kcap, every command crashes with `An invalid request URI was provided`. What's going on and how do I fix it?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Diagnoses this as the v1 config format, which stored `server_url` as a bare
+        host name without a scheme. Gives the fix: `kcap config set server_url
+        https://my-tenant.kcap.ai` (a full https URL), or alternatively delete
+        `~/.config/kcap/config.json` and re-run `kcap setup`. Does not blame network,
+        TLS certs, or the server being down. If the answer notes that current builds
+        usually surface a self-documenting hint ("server_url is missing a scheme. Run:
+        kcap config set server_url https://<host>") rather than the raw .NET error,
+        that is correct and must not be penalized; the raw "An invalid request URI was
+        provided" is the older/narrower symptom and need not be present on every
+        command.
+
+- description: "[config] Where the config file lives and whether the path is configurable"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "Where does kcap store its config file, and can I change that location?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        States the config directory is `$HOME/.config/kcap/` so the file is
+        `$HOME/.config/kcap/config.json`. Does NOT claim it lives at `~/.kcap`,
+        `~/.kcap/config.json`, `~/.kcaprc`, or anywhere directly under the home
+        directory. May note `kcap status` prints the resolved config path (the
+        reliable way to find it) or that other state (`repos.json`,
+        `daemons/<name>.lock`) sits in the same directory, but those are optional and
+        their absence is not a failure.
+    - type: llm-rubric
+      value: >-
+        Says the location IS configurable via the `KCAP_CONFIG_DIR` environment
+        variable, which relocates the whole directory. If it addresses XDG at all, it
+        states kcap does NOT honor `XDG_CONFIG_HOME` (only `KCAP_CONFIG_DIR`
+        overrides); an answer that simply omits XDG is acceptable, but one that claims
+        setting `XDG_CONFIG_HOME` moves kcap's config is wrong. Does not invent a
+        `--config` global flag, a `config_dir` config key, or a `KCAP_CONFIG`/
+        `KCAP_HOME` env var.
+
+- description: "[plugin] Installing Codex hooks/skills after setup"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "I installed the Codex CLI after I'd already run kcap setup. How do I get kcap's Codex hooks and skills now?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Tells the user to run `kcap plugin install --codex` for a user-scope install
+        of the Codex hooks + skills. May additionally mention `--project` (single-repo
+        hook install), `--skills` (skills only without Codex hooks), or that the next
+        `codex` launch prompts to trust the hooks (accept once), but those extra
+        details are optional and their absence is not a failure. Does not tell them to
+        re-run full `kcap setup` as the only option or invent a `kcap codex`
+        subcommand.
