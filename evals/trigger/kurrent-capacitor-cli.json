@@ -40,6 +40,26 @@
     "note": "sessions/privacy — hide vs disable semantics"
   },
   {
+    "query": "How do I stop kcap from recording sessions in a particular directory?",
+    "should_trigger": true,
+    "note": "path exclusion — kcap ignore a directory tree (references/config-privacy.md)"
+  },
+  {
+    "query": "If I exclude a parent folder from recording, does Capacitor still skip sessions in its subfolders?",
+    "should_trigger": true,
+    "note": "path exclusion — nested-subdirectory behaviour of kcap ignore; generalizes the missed query without repeating it"
+  },
+  {
+    "query": "Can I keep recording one repo while excluding the directory tree it lives under from Capacitor?",
+    "should_trigger": true,
+    "note": "path exclusion — directory-tree exclusion vs per-repo recording"
+  },
+  {
+    "query": "How do I add build artifacts and node_modules to my .gitignore file?",
+    "should_trigger": false,
+    "note": "DEFER — generic .gitignore, not kcap; guards the ignore -> gitignore name collision"
+  },
+  {
     "query": "Set up profiles so kcap auto-switches Capacitor server by git remote",
     "should_trigger": true,
     "note": "profiles — multi-server auto-switch"

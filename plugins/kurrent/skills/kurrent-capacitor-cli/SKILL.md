@@ -7,7 +7,8 @@ description: >-
   file location and on-disk state (where kcap stores its config/logs/locks
   and how to relocate them), importing past sessions, recap, eval, errors,
   hide, disable, daemon, hosted agents, MCP sessions/review, PR review,
-  plugin hooks, visibility and privacy controls, renamed-dir remap, npm
+  plugin hooks, ignoring or excluding repos and directory trees from
+  recording, visibility and privacy controls, renamed-dir remap, npm
   install-scripts gotcha. Do NOT use for the KurrentDB database, its
   client SDKs, or Kurrent Cloud (use kurrent-docs), or for migrating
   EventStoreDB code onto the KurrentDB client (use kurrent-upgrade); kcap
