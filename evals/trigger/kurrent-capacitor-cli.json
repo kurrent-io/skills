@@ -65,6 +65,26 @@
     "note": "profiles — multi-server auto-switch"
   },
   {
+    "query": "How do I get the Kurrent Capacitor CLI recording my Codex sessions?",
+    "should_trigger": true,
+    "note": "product-name alias — 'Kurrent Capacitor CLI' is the same tool as kcap"
+  },
+  {
+    "query": "Set up the Capacitor CLI from Kurrent so it captures my Claude Code transcripts",
+    "should_trigger": true,
+    "note": "product-name alias — 'Capacitor CLI' (the Kurrent one), disambiguated by Kurrent + session recording"
+  },
+  {
+    "query": "How do I add the iOS platform to my Ionic app with the Capacitor CLI?",
+    "should_trigger": false,
+    "note": "DEFER — Ionic Capacitor native-runtime framework, not the Kurrent kcap CLI; guards the Capacitor name collision"
+  },
+  {
+    "query": "npx cap sync isn't copying my web assets into the native Android project",
+    "should_trigger": false,
+    "note": "DEFER — Ionic Capacitor (npx cap) build tooling, unrelated to kcap session recording"
+  },
+  {
     "query": "Where do I configure KurrentDB's database server settings and connection string?",
     "should_trigger": false,
     "note": "DEFER to kurrent-docs — KurrentDB the database, not the kcap CLI; 'config' here is the DB server, not Capacitor"

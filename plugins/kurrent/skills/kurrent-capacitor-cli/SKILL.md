@@ -1,9 +1,10 @@
 ---
 name: kurrent-capacitor-cli
 description: >-
-  Use when installing, configuring, or operating the kcap CLI / Kurrent
-  Capacitor (npm @kurrent/kcap), which records Claude Code, Codex, Cursor
-  sessions to a Capacitor server. Install, setup, login, profiles, config
+  Use when installing, configuring, or operating the kcap CLI, also called
+  the Kurrent Capacitor CLI or Capacitor CLI (npm @kurrent/kcap), which
+  records Claude Code, Codex, Cursor sessions to a Capacitor server.
+  Install, setup, login, profiles, config
   file location and on-disk state (where kcap stores its config/logs/locks
   and how to relocate them), importing past sessions, recap, eval, errors,
   hide, disable, daemon, hosted agents, MCP sessions/review, PR review,
@@ -13,6 +14,8 @@ description: >-
   client SDKs, or Kurrent Cloud (use kurrent-docs), or for migrating
   EventStoreDB code onto the KurrentDB client (use kurrent-upgrade); kcap
   records coding-agent sessions and is unrelated to a KurrentDB cluster.
+  Not Ionic Capacitor: this is unrelated to the Ionic/web native-runtime
+  framework or its cap / npx cap CLI.
 ---
 
 # kcap CLI (Kurrent Capacitor)
