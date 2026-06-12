@@ -53,7 +53,7 @@ Two mechanisms below, pick the one matching how you want to scope it. Either way
 kcap config set excluded_repos "myorg/secret-project,personal/diary"
 ```
 
-Entries are full `owner/repo` slugs, matched exactly (case-insensitive). No substring, no wildcard, no validation on set. So a bare owner like `w1am` saves fine but matches nothing and keeps recording, silently. To exclude a whole owner, use `kcap ignore <path>` instead. Undetectable repos count as not excluded.
+Entries are full `owner/repo` slugs, matched exactly (case-insensitive). No substring, no wildcard, no validation on set. So a bare owner like `acme` saves fine but matches nothing and keeps recording, silently. To exclude a whole owner, use `kcap ignore <path>` instead. Undetectable repos count as not excluded.
 
 **By working-directory path**, `kcap ignore` (any session whose cwd is, or sits inside, the path):
 

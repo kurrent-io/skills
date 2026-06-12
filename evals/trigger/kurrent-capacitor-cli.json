@@ -5,9 +5,9 @@
     "note": "config location — the exact phrasing that missed; config file path is a kurrent-capacitor-cli concern (references/config-privacy.md)"
   },
   {
-    "query": "Where is the kcap config file on disk?",
+    "query": "How do I install the kcap hooks and skills into Claude Code as a plugin?",
     "should_trigger": true,
-    "note": "config location — direct ask for the config path"
+    "note": "plugins — kcap plugin install (hooks + skills), references/plugins.md"
   },
   {
     "query": "Can I move kcap's config to a different directory?",
@@ -85,8 +85,8 @@
     "note": "DEFER to kurrent-upgrade — client-SDK migration, not the kcap CLI"
   },
   {
-    "query": "What does a kurrentdb:// connection string look like for a TLS cluster?",
-    "should_trigger": false,
-    "note": "DEFER to kurrent-docs — KurrentDB connection string, unrelated to kcap"
+    "query": "How do I give Claude transcript context from past Capacitor sessions when reviewing a PR?",
+    "should_trigger": true,
+    "note": "mcp-review — kcap review / kcap mcp PR context, references/mcp-review.md"
   }
 ]

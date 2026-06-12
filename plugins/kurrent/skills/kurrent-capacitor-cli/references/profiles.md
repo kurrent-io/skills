@@ -34,6 +34,14 @@ kcap use oss --save            # bind AND write a committable .kcap.json for the
 
 Without `--global`, `use` binds to the repo root (or current directory). `--save` writes `.kcap.json` at the bind directory so a team shares one profile by committing the file.
 
+### Directory bindings are exact, no path globs
+
+`kcap use` bindings keyed on **git repo root**, matched exactly. No path glob, prefix, regex, so `/home/user/*` is invalid. Only wildcard mechanism is `--remote` (matches git-remote URL, see above), not filesystem paths.
+
+Key is repo root, so binding covers the **whole repo**: every subdir resolves up to same root and matches. Does NOT cover sibling repos, non-git dirs, nested separate repos.
+
+**Which to use:** `--remote` when many repos share host/org (one pattern covers all). `kcap use` for one-off local binding of a single repo.
+
 ## Resolution order
 
 When the CLI needs to decide which profile/server to use, it checks, in order:
