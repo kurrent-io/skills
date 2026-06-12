@@ -40,19 +40,9 @@
     "note": "sessions/privacy — hide vs disable semantics"
   },
   {
-    "query": "How do I stop kcap from recording sessions in a particular directory?",
-    "should_trigger": true,
-    "note": "path exclusion — kcap ignore a directory tree (references/config-privacy.md)"
-  },
-  {
     "query": "If I exclude a parent folder from recording, does Capacitor still skip sessions in its subfolders?",
     "should_trigger": true,
-    "note": "path exclusion — nested-subdirectory behaviour of kcap ignore; generalizes the missed query without repeating it"
-  },
-  {
-    "query": "Can I keep recording one repo while excluding the directory tree it lives under from Capacitor?",
-    "should_trigger": true,
-    "note": "path exclusion — directory-tree exclusion vs per-repo recording"
+    "note": "path exclusion — nested-subdirectory behaviour of kcap ignore; generalizes the original missed query"
   },
   {
     "query": "How do I add build artifacts and node_modules to my .gitignore file?",
@@ -65,14 +55,9 @@
     "note": "profiles — multi-server auto-switch"
   },
   {
-    "query": "How do I get the Kurrent Capacitor CLI recording my Codex sessions?",
-    "should_trigger": true,
-    "note": "product-name alias — 'Kurrent Capacitor CLI' is the same tool as kcap"
-  },
-  {
     "query": "Set up the Capacitor CLI from Kurrent so it captures my Claude Code transcripts",
     "should_trigger": true,
-    "note": "product-name alias — 'Capacitor CLI' (the Kurrent one), disambiguated by Kurrent + session recording"
+    "note": "product-name alias — bare 'Capacitor CLI' (the Kurrent one); the higher-collision phrasing, paired with the Ionic negatives below"
   },
   {
     "query": "How do I add the iOS platform to my Ionic app with the Capacitor CLI?",

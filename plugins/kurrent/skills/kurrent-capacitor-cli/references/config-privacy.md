@@ -26,7 +26,7 @@ KCAP_CONFIG_DIR=/etc/kcap kcap status
 | `daemon.max_agents`                        | Max concurrent hosted coding agents.                                                                                |
 | `daemon.claude_path` / `daemon.codex_path` | Paths to the agent binaries the daemon spawns (see [daemon.md](daemon.md)).                                         |
 | `default_visibility`                       | Default session visibility: `private`, `org_public`, or `public`.                                                   |
-| `excluded_repos`                           | Comma-separated `owner/repo` list to never record.                                                                  |
+| `excluded_repos`                           | Comma-separated `owner/repo` list to never record (exact match, no wildcard, see below).                            |
 | `use_provider_api_key`                     | Keep `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` in headless agent spawns (default off, see below).                      |
 | `disable_session_guidelines`               | Skip injecting recurring-lessons context at SessionStart (`true`/`false`).                                          |
 | `update_check`                             | Enable the CLI update check (`true`/`false`).                                                                       |
@@ -43,13 +43,17 @@ kcap config set default_visibility public        # visible to everyone
 
 ## Two ways to exclude work from recording
 
-These are distinct mechanisms, use the one that matches how you want to scope the exclusion. In both cases the session is **silently skipped: hooks fire no data and nothing is recorded** (and `kcap import` skips them too).
+Recording is **opt-out**: every session is recorded by default and you carve out exclusions — there is no include-only allowlist. To approximate "record only this one project", install the hooks at project scope in just that repo (`kcap plugin install --project`, see [plugins.md](plugins.md)) and skip the user-level install, so no other directory fires the hooks.
+
+The two exclusion mechanisms below are distinct, use the one that matches how you want to scope the exclusion. In both cases the session is **silently skipped: hooks fire no data and nothing is recorded** (and `kcap import` skips them too).
 
 **By git remote**, `excluded_repos`:
 
 ```bash
 kcap config set excluded_repos "myorg/secret-project,personal/diary"
 ```
+
+Each entry must be a **full `owner/repo` slug**; matching is exact and case-insensitive — no substring match and no owner-wildcard. `kcap config set excluded_repos` does **no validation**: a bare owner such as `w1am`, a host-prefixed value, or a trailing-slash entry is stored as typed and matches no repository, so every repo keeps recording with no error or warning. To exclude all repos under one owner, use path-based `kcap ignore <path>` instead. If a session's repo can't be detected, it is treated as **not excluded** (recording proceeds).
 
 **By working-directory path**, `kcap ignore` (any session whose cwd is, or sits inside, the path):
 

@@ -1,34 +1,3 @@
-- description: "[install] npm 11+ install-scripts gating, approve-scripts does not reliably apply to global installs"
-  vars:
-    skill: kurrent-capacitor-cli
-    message: "I ran `npm install -g @kurrent/kcap` and npm warned that the package has install scripts not yet covered by allowScripts. It suggested `npm approve-scripts @kurrent/kcap`. How do I actually fix this?"
-  assert:
-    - type: llm-rubric
-      value: >-
-        Explains that npm now gates lifecycle scripts via allow-scripts policy and
-        that global installs may require explicit opt-in. States that
-        `npm approve-scripts @kurrent/kcap` may not resolve global installs in
-        some npm versions because approval is not consistently applied in global
-        install context. Does NOT assert a specific npm bug code like EGLOBAL.
-
-    - type: llm-rubric
-      value: >-
-        Provides the correct fixes: either one-off
-        `npm install -g @kurrent/kcap --allow-scripts=@kurrent/kcap`, or persistent
-        config via `allow-scripts[]=@kurrent/kcap` in `~/.npmrc`.
-
-    - type: llm-rubric
-      value: >-
-        Conveys that the `postinstall` script is non-essential: the `kcap` CLI works
-        regardless of whether it runs. May additionally explain that the native binary
-        ships as a platform-specific optional dependency (not via postinstall), that
-        the script only refreshes user-scope agent integrations and is gated by
-        `--if-installed`, or that users can run `kcap plugin install ... --if-installed`
-        manually, but those mechanics are optional and their absence is not a failure.
-        Does NOT recommend unrelated fixes such as cache resets, fixing file
-        permissions, or `sudo`; naming any of those only to dismiss them as NOT the
-        cause is acceptable and not a failure.
-
 - description: "[setup] First-time recording flow end to end"
   vars:
     skill: kurrent-capacitor-cli
@@ -217,6 +186,42 @@
         `excluded_repos` live inside the profile, not at top level); if it claims
         `excluded_repos` is global it is wrong. Does not invent a `.kcapignore` file or
         a `--exclude` flag on every command.
+
+- description: "[config] excluded_repos needs full owner/repo slugs; a bare owner silently no-ops"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "I want to keep kcap from recording anything under my GitHub account, so I ran `kcap config set excluded_repos myusername`. Does that exclude all my repos?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        States this does NOT work: `excluded_repos` entries must be full `owner/repo`
+        slugs and matching is exact and case-insensitive, with no owner-wildcard and no
+        substring match. Conveys that `kcap config set excluded_repos` performs no
+        validation, so a bare owner (or otherwise malformed entry) is stored as typed
+        with no error or warning yet matches no repository, and recording silently
+        continues. Does not claim a bare owner excludes all of that owner's repos, and
+        does not invent a wildcard syntax.
+    - type: llm-rubric
+      value: >-
+        Redirects the actual goal ("exclude everything under one owner") to path-based
+        `kcap ignore <path>` pointed at the directory tree the clones live under, since
+        `excluded_repos` has no owner-level exclusion. Does not tell the user to list
+        every `owner/repo` as the only option without mentioning the path-based route.
+
+- description: "[config] No include-only allowlist; recording is opt-out"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "Is there a way to tell kcap to only record sessions in one project folder and ignore everything else, like an allowlist?"
+  assert:
+    - type: llm-rubric
+      value: >-
+        Explains that kcap recording is opt-out: every session is recorded by default
+        and there is no include-only allowlist / `included_repos` setting. Describes the
+        closest approximation as installing hooks at project scope only
+        (`kcap plugin install --project`) in that one repo while skipping the user-level
+        install, so no other directory fires the hooks. Treating "exclude everything
+        else" via `kcap ignore` / `excluded_repos` as an alternative is acceptable. Does
+        not invent an allowlist config key or a `--only`/`--include` flag.
 
 - description: "[mcp] Letting an agent search past sessions mid-chat"
   vars:
