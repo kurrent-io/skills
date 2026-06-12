@@ -33,7 +33,7 @@ Lets an agent search and recall prior Capacitor sessions without leaving the cha
 - **`get_session_summary`**: concise `summary_text` + `plan` for a session; use this to orient first.
 - **`get_session_transcript`**: speaker-tagged events; pair `around_event` (and `agent_id` for a subagent hit) with the values from `search_sessions` to fetch exact decision context.
 
-> Because it's auto-registered, the answer to "can my agent search my past sessions mid-chat?" is yes, don't tell the user to write an MCP config from scratch.
+> Because the Kurrent Capacitor plugin auto-registers it, an agent can search past sessions mid-chat with no hand-written MCP config.
 
 ## `kcap review`: PR review with full context
 

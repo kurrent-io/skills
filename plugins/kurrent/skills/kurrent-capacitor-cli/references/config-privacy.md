@@ -62,7 +62,7 @@ kcap ignore --remove ~/code/secret-project
 
 `kcap ignore` resolves `.`/`~` to absolute paths, strips trailing separators, and resolves symlinks (so a worktree symlink and its target match).
 
-**Scope:** both lists are stored **per-profile** on the active profile (`excluded_repos` and the ignore/`excluded_paths` list live inside the profile object, not at the top level of the config). Switching profiles with `kcap use` switches both. Don't claim `excluded_repos` is global, and don't invent a `.kcapignore` file or a `--exclude` flag on commands.
+**Scope:** both lists are stored **per-profile** on the active profile (`excluded_repos` and the ignore/`excluded_paths` list live inside the profile object, not at the top level of the config). Switching profiles with `kcap use` switches both. Each profile carries its own pair of lists, so exclusions set on one profile do not apply under another. The exclusions live entirely in these two settings, managed with `kcap config set excluded_repos` and `kcap ignore`.
 
 ## Provider API keys for headless calls
 
@@ -75,7 +75,7 @@ kcap config set use_provider_api_key true     # keep the keys in headless spawns
 KCAP_USE_PROVIDER_API_KEY=1 kcap recap ...       # one-off override (1/true/yes/on or 0/false/no/off)
 ```
 
-The env var wins over the profile setting. `kcap setup` also prompts for this when it detects either key in the environment. (Don't advise simply unsetting the key as the only fix.)
+The env var wins over the profile setting. `kcap setup` also prompts for this when it detects either key in the environment. Opting back in with `use_provider_api_key` keeps PAYG auth working; unsetting the key is a separate workaround that also forces subscription auth.
 
 ## SessionStart guidance injection
 

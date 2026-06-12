@@ -19,7 +19,7 @@ kcap import --repo owner/name     # one specific repo
 kcap import --repo .              # the repo at the current cwd (must be a git repo with an origin remote)
 ```
 
-**`--org` uses the active profile *name* as the GitHub org login** to filter on. It works out of the box for tenant-bound profiles created by `kcap setup`; on `default` or a manually-named profile, use `--repo` instead (or bind a profile, see [profiles.md](profiles.md)). Don't claim `--org` auto-detects the org from git.
+**`--org` uses the active profile *name* as the GitHub org login** to filter on. It works out of the box for tenant-bound profiles created by `kcap setup`; on `default` or a manually-named profile, use `--repo` instead (or bind a profile, see [profiles.md](profiles.md)). The org login comes from the profile name, not from the git remote.
 
 The command is **idempotent and resumable**, a server-side watermark dedupes already-imported lines, so re-running the same scope only uploads what's missing. Each run shows a confirmation summary (scope, matched count, repo samples, visibility) before uploading.
 

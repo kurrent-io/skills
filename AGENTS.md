@@ -155,7 +155,7 @@ Use consistent header patterns inside `SKILL.md`:
 - `## Overview` — one paragraph on what the skill covers, followed by a `**Key ...:**` bullet list of the main levers/concepts (matches Claude Code's official skill layout)
 - `## Routing` (or a domain-picker table, as in `kurrent-docs`) — when to use this skill vs siblings, or which reference file to load for a given user need
 - `## Quick Reference` — common patterns / commands
-- `## Additional Resources` — closes the skill; under a `### Reference Files` sub-heading, a bullet list of `**`references/x.md`** - one-line description` entries pointing into `references/`. Follow Claude Code's convention here; do not use a `## Files` table.
+- `## Additional Resources` — closes the skill; under a `### Reference Files` sub-heading, a bullet list of `**`references/x.md`** - one-line description` entries pointing into `references/`. Follow Claude Code's convention here; do not use a `## Files` table. **Skip this section when a `## Routing` table already enumerates the reference files**: for a router skill the table maps need-to-file with descriptions, so a separate inventory only duplicates it and risks drift. Add the section only when no routing table indexes the references.
 
 ## Authoring Discipline
 

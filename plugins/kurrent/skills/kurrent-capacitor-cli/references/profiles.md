@@ -24,8 +24,6 @@ The `*` in a remote pattern is **slash-bounded**: it matches exactly one path se
 ❌ github.com/myorg/*   does NOT match  github.com/myorg/team/repo   (deeper path)
 ```
 
-Don't claim `*` spans `/`.
-
 ## Switching the active profile
 
 ```bash

@@ -8,7 +8,10 @@ description: >-
   and how to relocate them), importing past sessions, recap, eval, errors,
   hide, disable, daemon, hosted agents, MCP sessions/review, PR review,
   plugin hooks, visibility and privacy controls, renamed-dir remap, npm
-  install-scripts gotcha.
+  install-scripts gotcha. Do NOT use for the KurrentDB database, its
+  client SDKs, or Kurrent Cloud (use kurrent-docs), or for migrating
+  EventStoreDB code onto the KurrentDB client (use kurrent-upgrade); kcap
+  records coding-agent sessions and is unrelated to a KurrentDB cluster.
 ---
 
 # kcap CLI (Kurrent Capacitor)
@@ -44,7 +47,7 @@ Pick the one file that owns the user's need. Don't load more than you need.
 | Giving an agent session/PR context: `kcap mcp sessions` / `review` / `judge`, `kcap review <pr>`, auto-registration, the MCP tools                                                                                      | [`references/mcp-review.md`](references/mcp-review.md)         |
 | `kcap plugin install` / `remove` (hooks + skills) for Claude / Codex / Cursor, `--project` vs user scope, `--skills`, `--if-installed`, and `kcap uninstall`                                                            | [`references/plugins.md`](references/plugins.md)               |
 
-## Quick reference
+## Quick Reference
 
 ```bash
 # First run

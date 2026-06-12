@@ -79,7 +79,7 @@ Three agents are supported as recording sources: **Claude Code, Codex CLI, and C
 - **Claude Code** and **Codex CLI** are detected via `PATH`.
 - **Cursor** is detected by user-dir presence (`~/.cursor/`), so IDE-only users without a `cursor` shell command are still covered.
 
-Because of that split, don't describe recording as hinging solely on an agent being "on PATH", that's only true for Claude and Codex.
+PATH detection therefore applies only to Claude and Codex; Cursor is covered by its user directory even when no `cursor` command is on PATH.
 
 ### Non-interactive / CI
 

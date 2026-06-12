@@ -54,9 +54,7 @@ kcap eval --list-questions                # print the question taxonomy and exit
 
 Output is **a score per category plus an overall score** — each on a **1-5 scale with a pass / warn / fail verdict** — plus a finding and supporting evidence per question. The aggregate is persisted back to the session's stream as a `SessionEvalCompleted` event, so trends are queryable from the dashboard. Judges run sequentially; expect ~1-3 minutes total.
 
-`--questions` and `--skip` are mutually exclusive. Both accept category names (`safety`, `plan_adherence`, `quality`, `efficiency`) and individual question IDs (e.g. `tests_written`).
-
-> Don't fabricate flags like `--score`, `--rubric`, or `--output json`.
+`--questions` and `--skip` are mutually exclusive and are the only flags that select which questions run. Both take category names (`safety`, `plan_adherence`, `quality`, `efficiency`) and individual question IDs (e.g. `tests_written`).
 
 ## `kcap validate-plan`: plan completion
 
@@ -81,7 +79,7 @@ kcap disable [sessionId]    # stop recording AND delete server data
 
   This is **irreversible on the server side and happens immediately with no confirmation prompt.** The local transcript file on disk is left untouched.
 
-Don't conflate the two, and don't claim `disable` asks for confirmation or that either command edits the local transcript.
+So the two differ on every axis: `hide` is a reversible visibility change that keeps the recording, while `disable` immediately and irreversibly deletes server data with no prompt. Neither touches the local transcript.
 
 ## `kcap set-title`
 

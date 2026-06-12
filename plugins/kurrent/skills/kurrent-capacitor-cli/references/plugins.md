@@ -18,7 +18,7 @@ kcap plugin remove  [--codex] [--cursor] [--skills]
 
 After installing **Codex** hooks, the next `codex` launch prompts to **trust the new hooks, accept once** to trust them all (or run `/hooks` inside Codex to trust entries individually). For a `--project` install also run `codex` once in the repo and accept the workspace-trust prompt.
 
-> Don't tell a user to re-run full `kcap setup` as the only way to add a late-installed agent, and don't invent a `kcap codex` subcommand, it's `kcap plugin install --codex`. There is no `--claude` flag either: bare `kcap plugin install` (optionally `--if-installed`) is the Claude target. `--claude` only exists on `kcap import` as a vendor filter, not on `plugin install`.
+> To add an agent installed after the initial `kcap setup`, run the matching `kcap plugin install` target rather than re-running the whole wizard: Codex is `kcap plugin install --codex`, and Claude is the bare `kcap plugin install` (optionally `--if-installed`). On `plugin install`, Claude is the default target with no flag of its own; `--claude` exists only on `kcap import` as a vendor filter.
 
 ## Scope
 
