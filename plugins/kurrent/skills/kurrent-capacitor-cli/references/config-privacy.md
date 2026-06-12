@@ -43,9 +43,9 @@ kcap config set default_visibility public        # visible to everyone
 
 ## Two ways to exclude work from recording
 
-Recording is **opt-out**: every session is recorded by default and you carve out exclusions — there is no include-only allowlist. To approximate "record only this one project", install the hooks at project scope in just that repo (`kcap plugin install --project`, see [plugins.md](plugins.md)) and skip the user-level install, so no other directory fires the hooks.
+Recording is opt-out: everything is recorded by default, there's no include-only allowlist. To record only one project, install hooks at project scope in that repo (`kcap plugin install --project`, see [plugins.md](plugins.md)) and skip the user-level install.
 
-The two exclusion mechanisms below are distinct, use the one that matches how you want to scope the exclusion. In both cases the session is **silently skipped: hooks fire no data and nothing is recorded** (and `kcap import` skips them too).
+Two mechanisms below, pick the one matching how you want to scope it. Either way the session is **silently skipped: no data recorded** (and `kcap import` skips it too).
 
 **By git remote**, `excluded_repos`:
 
@@ -53,7 +53,7 @@ The two exclusion mechanisms below are distinct, use the one that matches how yo
 kcap config set excluded_repos "myorg/secret-project,personal/diary"
 ```
 
-Each entry must be a **full `owner/repo` slug**; matching is exact and case-insensitive — no substring match and no owner-wildcard. `kcap config set excluded_repos` does **no validation**: a bare owner such as `w1am`, a host-prefixed value, or a trailing-slash entry is stored as typed and matches no repository, so every repo keeps recording with no error or warning. To exclude all repos under one owner, use path-based `kcap ignore <path>` instead. If a session's repo can't be detected, it is treated as **not excluded** (recording proceeds).
+Entries are full `owner/repo` slugs, matched exactly (case-insensitive). No substring, no wildcard, no validation on set. So a bare owner like `w1am` saves fine but matches nothing and keeps recording, silently. To exclude a whole owner, use `kcap ignore <path>` instead. Undetectable repos count as not excluded.
 
 **By working-directory path**, `kcap ignore` (any session whose cwd is, or sits inside, the path):
 
