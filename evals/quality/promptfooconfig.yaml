@@ -10,7 +10,7 @@ providers:
       model: claude-haiku-4-5-20251001
 
 evaluateOptions:
-  rubricProvider: deepseek:deepseek-v4-flash
+  rubricProvider: anthropic:messages:claude-haiku-4-5-20251001
 
 prompts:
   - file://./prompts/baseline.cjs
