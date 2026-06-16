@@ -159,22 +159,42 @@ Use consistent header patterns inside `SKILL.md`:
 
 ## Authoring Discipline
 
-Structure is above; this is content quality. A skill is a prompt the agent paraphrases, not a doc the user reads — anything in a `references/` body can land in the answer verbatim. Content-review pass before PR.
+Structure is covered above; this is content quality. Do a content-review pass before every PR.
 
-**Rules:**
+### Mental model
 
-- **R1 — Section ownership.** A section says only what answers its own question. Incidental facts (sibling filenames, "also holds…" inventories, asides) → fold in generically or move to the reference that owns them; else the agent recites them as noise.
-- **R2 — Guidance ≠ fact.** Agent-directed prose in a `references/` body gets relayed as fact to a user who never asked. Negations/warnings ("not `~/.foo`", "don't guess", "must not claim X") → the **eval rubric** (assert the output), not the prose. Agent instructions ("copy names from references, don't reconstruct") OK in `SKILL.md` body only.
-- **R3 — Descriptions: categories, not queries.** A legit question not triggering = a missing *capability category* in `description:`, not a missing keyword. Add the category at peer altitude (`profiles`, `daemon`, `import`…). Never paste the failing query; never embed paths/flags/error strings as bait (those live in `references/`). Echoing the missed query is a band-aid — next phrasing misses too.
-- **R4 — Every content change ships a generalizing eval.** Body/`references/` → **quality** case; `description:` → **trigger** cases (axes + re-run matrix in Evals). Trigger positives = *varied* phrasings, never the verbatim fix query; include negatives guarding sibling + name collisions (Kurrent vs Ionic Capacitor; kcap config vs KurrentDB server config). Passing only the wording you fixed tests the band-aid.
-- **R5 — Verify the rendered answer, not the diff.** File changed ≠ behaviour changed. Load the skill, ask the real question, read the output — R1/R2 leaks surface only there.
+A skill is not a doc a human reads, it's a prompt an agent reads in three layers and re-emits. Each layer is consumed differently, and every rule below follows from which layer owns what:
 
-**Diagnostics:**
+- **`description:`** (always in context) is matched against the user's *intent*; triggering is decided here (R3).
+- **`SKILL.md` body** (loaded on trigger) is read as *standing instruction*: how to behave, control flow, guards (R2).
+- **`references/`** (loaded on demand) is *paraphrased into the answer*, so anything in it can land verbatim; treat it as knowledge the agent relays, never as instruction (R1, R2).
 
-- *Query doesn't trigger* → in scope? Yes → category in `description:`? No → add it (R3); exists but still misses → name collision, strengthen the product name + add negative cases (no keyword-stuffing). Out of scope → sibling's job: sharpen `Do NOT use for…` + add a negative case.
-- *Answer has unasked-for content* → find its source text. Doesn't answer the section's question → leak (R1), cut or relocate. Guidance-as-fact (negation/warning/"don't") → constraint to rubric (R2), state positively.
+The layers also nest by reach: the description gates whether the body loads, the body decides which references load. A fact in the wrong layer is not just misplaced, it's read in the wrong mode, relayed when it should be obeyed or loaded too late to act on. Because the output is the re-emitted prompt and not the file, correctness is judged on the rendered answer, not the diff (R4, R5).
 
-**Checklist (atop the sync/structure gates):** no incidental facts / guidance-as-fact in touched `references/` (R1, R2); new/changed `description:` adds a category, not a query/path (R3); quality and/or trigger eval added (R4); real question re-run, rendered answer read (R5).
+### Rules
+
+- **R1 · Section ownership.** A section says only what answers its own question. Incidental facts (sibling filenames, "also holds…" inventories, asides) fold in generically or move to the reference that owns them; otherwise the agent recites them as noise.
+- **R2 · Knowledge vs control flow.** A `references/` body is *relayed to the user as fact* and *loaded only on demand*, so an agent instruction there both leaks as unasked-for advice and goes missing on the confident path that skips the reference, exactly where a guard is needed. Route by kind:
+  - Descriptive fact → `references/` (what's true).
+  - Negation or warning ("not `~/.foo`", "don't guess", "must not claim X") → the **eval rubric** (assert the output), not the prose.
+  - Behavioral guard ("ask which scope before `kcap use`", "copy names from references, don't reconstruct", any stop/confirm) → `SKILL.md` body, always loaded with the skill and read as standing instruction (how to behave).
+- **R3 · Descriptions are categories, not queries.** A legit question not triggering means a missing *capability category* in `description:`, not a missing keyword. Add the category at peer altitude (`profiles`, `daemon`, `import`…). Never paste the failing query; never embed paths, flags, or error strings as bait (those live in `references/`). Echoing the missed query is a band-aid: the next phrasing misses too.
+- **R4 · Every content change ships a generalizing eval.** Body or `references/` → a **quality** case; `description:` → **trigger** cases (axes and re-run matrix in Evals). Trigger positives are *varied* phrasings, never the verbatim fix query; include negatives guarding sibling and name collisions (Kurrent vs Ionic Capacitor; kcap config vs KurrentDB server config). Passing only the wording you fixed tests the band-aid.
+- **R5 · Verify the rendered answer, not the diff.** File changed ≠ behaviour changed. Load the skill, ask the real question, read the output: R1 and R2 leaks surface only there.
+
+### Diagnostics
+
+- **Query doesn't trigger.** In scope? If yes, check `description:` for the category: missing → add it (R3); present but still missing → name collision, so strengthen the product name and add negative cases (no keyword-stuffing). Out of scope → a sibling's job: sharpen `Do NOT use for…` and add a negative case.
+- **Answer has unasked-for content.** Find its source text. Doesn't answer the section's question → leak (R1), cut or relocate. Guidance-as-fact (negation, warning, "don't") → move the constraint to the rubric (R2) and state the prose positively.
+
+### Pre-PR checklist
+
+Atop the sync and structure gates:
+
+- [ ] No incidental facts, guidance-as-fact, or pre-action guards stranded in touched `references/` (R1, R2).
+- [ ] New or changed `description:` adds a category, not a query or path (R3).
+- [ ] Quality and/or trigger eval added (R4).
+- [ ] Real question re-run, rendered answer read (R5).
 
 ## Reference Docs Are Synced From Upstream
 
