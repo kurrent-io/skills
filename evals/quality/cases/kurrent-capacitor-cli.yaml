@@ -82,6 +82,23 @@
         default or `--save` to write a shareable `.kcap.json`). Does not invent
         per-repo env vars or a single global config the user must edit by hand.
 
+- description: "[profiles] Switching the active profile surfaces the scope choice"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "Switch me over to my staging profile."
+  assert:
+    - type: llm-rubric
+      value: >-
+        Before applying `kcap use <name>`, surfaces the scope decision to the user
+        rather than silently choosing it: asks (or clearly presents the choice)
+        whether to bind the profile to the current repo only (the no-flag default)
+        or set it globally with `--global`. Explains that a no-flag `kcap use` creates
+        a repo-scoped binding that overrides the globally active profile for that
+        directory only, so the rest of the user's repos stay on the old profile. An
+        answer that just runs/recommends `kcap use staging` as if repo-scope were the
+        obviously intended outcome, without raising the global-vs-repo choice, is
+        WRONG. May also mention `--save` to write a shareable `.kcap.json`.
+
 - description: "[eval] LLM-as-judge session scoring"
   vars:
     skill: kurrent-capacitor-cli

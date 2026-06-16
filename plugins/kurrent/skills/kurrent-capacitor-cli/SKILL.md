@@ -44,6 +44,10 @@ Pick the one file that owns the user's need. Don't load more than you need.
 | Giving an agent session/PR context: `kcap mcp sessions` / `review` / `judge`, `kcap review <pr>`, auto-registration, the MCP tools                                                                                      | [`references/mcp-review.md`](references/mcp-review.md)         |
 | `kcap plugin install` / `remove` (hooks + skills) for Claude / Codex / Cursor, `--project` vs user scope, `--skills`, `--if-installed`, and `kcap uninstall`                                                            | [`references/plugins.md`](references/plugins.md)               |
 
+## Switching profiles
+
+**Before running `kcap use` to switch profiles, ask whether to bind it to this repo only (the no-flag default) or globally (`--global`).** A no-flag `kcap use` silently creates a repo-scoped binding that overrides the global active profile for that directory, so choosing scope for the user can quietly reroute one repo while the rest stay on the old profile. Surface the choice; don't assume. See [`references/profiles.md`](references/profiles.md) for the binding mechanics and resolution order.
+
 ## Quick Reference
 
 ```bash
