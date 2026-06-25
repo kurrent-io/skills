@@ -3,18 +3,25 @@
 `kcap plugin install` / `remove` manages the hooks and agent skills for each supported agent. `kcap setup` already installs these for detected agents; use `kcap plugin` to add an agent installed *after* setup, scope an install to one repo, or refresh.
 
 ```bash
-kcap plugin install [--project] [--codex] [--cursor] [--skills] [--if-installed]
-kcap plugin remove  [--codex] [--cursor] [--skills]
+kcap plugin install [--project] [--codex] [--cursor] [--copilot] [--gemini] [--kiro] [--pi] [--opencode] [--skills] [--if-installed]
+kcap plugin remove  [--codex] [--cursor] [--copilot] [--gemini] [--kiro] [--pi] [--opencode] [--skills]
 ```
+
+Eight agents have a vendor flag (`--codex`, `--cursor`, `--copilot`, `--gemini`, `--kiro`, `--pi`, `--opencode`, plus `--skills` for the agent-agnostic skills). Claude is the **default, flag-less** target — there is no `--claude` on `plugin` (it only exists as an `import` vendor filter).
 
 ## What each target installs
 
 | Command                        | Installs                                                                                                                                             |
 |--------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `kcap plugin install`          | Claude Code plugin (user scope). **Claude is the default target, with no flag, there is no `--claude` flag.**                                        |
-| `kcap plugin install --codex`  | Codex CLI **hooks AND agent skills** (`~/.codex/hooks.json` + `~/.agents/skills/`).                                                                  |
-| `kcap plugin install --cursor` | Cursor hooks (`~/.cursor/hooks.json`; all 8 supported entries, merged with existing).                                                                |
-| `kcap plugin install --skills` | Only the agent-agnostic skills (`~/.agents/skills/`), no Codex hooks. Use if you only have Cursor (or another agent that reads `~/.agents/skills/`). |
+| `kcap plugin install`            | Claude Code plugin (user scope). **Claude is the default target, with no flag, there is no `--claude` flag.**                                        |
+| `kcap plugin install --codex`    | Codex CLI **hooks AND agent skills** (`~/.codex/hooks.json` + `~/.agents/skills/`).                                                                  |
+| `kcap plugin install --cursor`   | Cursor hooks (`~/.cursor/hooks.json`; all 8 hook events, merged with existing). User-scope only.                                                     |
+| `kcap plugin install --copilot`  | Copilot CLI hooks written to `~/.copilot/hooks/kcap.json` (honours `$COPILOT_HOME`; Copilot merges every `*.json` there, so user files are untouched). Restart running `copilot` sessions after. |
+| `kcap plugin install --gemini`   | Gemini CLI hooks merged into the **shared** `~/.gemini/settings.json` (honours `$GEMINI_HOME`; other keys/hooks preserved, fails closed on invalid JSON). Restart `gemini` after. |
+| `kcap plugin install --kiro`     | Clones your default Kiro agent → `~/.kiro/agents/kcap.json` (preserving its tools), adds the `agentSpawn` hook, and sets it as default (`chat.defaultAgent`) so every session is captured (honours `$KIRO_HOME`). Needs `kiro-cli` on PATH; restart kiro-cli. |
+| `kcap plugin install --pi`       | Pi (badlogic/pi-mono) live-ingest **extension** → `~/.pi/agent/extensions/kcap.ts` (no shell hooks). Auto-loads on `pi` startup; shells out to `kcap hook --pi`, so `kcap` must be on PATH. User-wide only. |
+| `kcap plugin install --opencode` | SST OpenCode live-ingest **plugin** → `~/.config/opencode/plugins/kcap.ts` (no shell hooks). Auto-loads on `opencode` startup; shells out to `kcap hook --opencode`. User-wide only. |
+| `kcap plugin install --skills`   | Only the agent-agnostic skills (`~/.agents/skills/`), no Codex hooks. Use if you only have Cursor (or another agent that reads `~/.agents/skills/`). |
 
 After installing **Codex** hooks, the next `codex` launch prompts to **trust the new hooks, accept once** to trust them all (or run `/hooks` inside Codex to trust entries individually). For a `--project` install also run `codex` once in the repo and accept the workspace-trust prompt.
 
@@ -24,7 +31,7 @@ After installing **Codex** hooks, the next `codex` launch prompts to **trust the
 
 - **User scope (default):** hooks for the current user, fire for every session.
 - **`--project`:** apply hooks to the current repo only, Claude → `<repo>/.claude/settings.local.json`, Codex → `<repo>/.codex/hooks.json`. **Skills are always user-wide; `--project` only affects hooks.**
-- **Cursor** uses a single user-scope `~/.cursor/hooks.json`, there is no project variant, so `--project` has no effect with `--cursor`. Cursor is detected by user-dir presence, not `PATH`.
+- **Only Claude and Codex have a project scope.** Cursor, Copilot, Gemini, Kiro, Pi, and OpenCode are user-scope only (shared config files or in-process extensions/plugins), so `--project` has no effect with those flags. Cursor is detected by user-dir presence, not `PATH`.
 
 ## The installed skills
 
@@ -59,4 +66,4 @@ kcap uninstall --project --yes  # also strip project-scope hooks in the cwd's re
 kcap uninstall --keep-config    # remove integrations, keep ~/.config/kcap (profiles, tokens, ignore lists)
 ```
 
-`uninstall` stops running daemons and watcher processes, strips kcap entries from user-level Claude / Codex / Cursor hook files (preserving non-kcap entries), removes the `~/.agents/skills/kcap-*` skills (plus legacy `~/.codex/skills/kcap-*`), and deletes `~/.config/kcap/`. `--project` additionally cleans `<repo>/.claude/settings.local.json` and `<repo>/.codex/hooks.json` (errors if not inside a git tree; Cursor is user-scope only, so `--project` doesn't touch it). Per-agent selective cleanup isn't exposed here, use `kcap plugin remove [--codex|--cursor|--skills]` for that.
+`uninstall` always touches **all known agents**: it stops running daemons and watcher processes, then strips kcap from every integration — Claude / Codex / Cursor / Gemini hook entries (preserving non-kcap entries in shared files), the Copilot hooks file, the Kiro agent (restoring the default it replaced), the Pi extension and OpenCode plugin, the `~/.agents/skills/kcap-*` skills (plus legacy `~/.codex/skills/kcap-*`), and `~/.config/kcap/`. `--project` additionally cleans `<repo>/.claude/settings.local.json` and `<repo>/.codex/hooks.json` (errors if not inside a git tree; only Claude/Codex have project scope). Per-agent selective cleanup isn't exposed here, use `kcap plugin remove [--codex|--cursor|--copilot|--gemini|--kiro|--pi|--opencode|--skills]` for that.

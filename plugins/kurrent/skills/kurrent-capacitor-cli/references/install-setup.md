@@ -32,7 +32,7 @@ npm install -g @kurrent/kcap --allow-scripts=@kurrent/kcap
 allow-scripts[]=@kurrent/kcap
 ```
 
-**What the postinstall actually does:** it only *refreshes* user-scope agent integrations, Claude / Codex / Cursor skills and hook/plugin registration, by running `kcap plugin install ... --if-installed` for each. It runs on every global install but is gated by `--if-installed`, so it is a **no-op unless you previously opted in** (a marker file or pre-existing kcap entries are detected). It never installs onto a fresh system, swallows all errors, and always exits 0 so `npm install` can't fail.
+**What the postinstall actually does:** it only *refreshes* your opted-in user-scope agent integrations (skills + hook/plugin registration, across whichever of the supported agents you previously installed), by running `kcap plugin install ... --if-installed` for each. It runs on every global install but is gated by `--if-installed`, so it is a **no-op unless you previously opted in** (a marker file or pre-existing kcap entries are detected). It never installs onto a fresh system, swallows all errors, and always exits 0 so `npm install` can't fail.
 
 Without opting in, re-run the refresh by hand after each upgrade:
 
@@ -53,10 +53,10 @@ kcap setup
 
 Walks through these steps, in order:
 
-1. **Server URL** — provided by your admin, e.g. `https://my-tenant.kcap.ai`.
-2. **Login** — GitHub, browser/PKCE by default, falls back to Device Flow.
+1. **Server URL** — provided by your admin, e.g. `https://my-tenant.kcap.ai`. Can be skipped when the server supports tenant discovery (see Login).
+2. **Login** — at discovery you choose how to sign in: **email / SSO (WorkOS)** or **GitHub** (browser/PKCE by default, falls back to Device Flow). When the server's auth provider is `None`, setup prints "no login required" and skips this step.
 3. **Default visibility** — `private` / `org_public` / `public`; the dashboard-visibility default applied to new sessions.
-4. **Coding-agent hooks** — one yes/no per detected agent (Claude Code / Codex CLI / Cursor).
+4. **Coding-agent hooks** — one yes/no per detected agent (Claude Code / Codex CLI / Cursor / Copilot CLI / Gemini CLI / Kiro CLI / Pi / OpenCode).
 5. **Daemon name**.
 
 When you describe what `kcap setup` covers, list **all five** steps — the **default-visibility** choice is part of the wizard and is the one most easily forgotten.
@@ -74,12 +74,13 @@ kcap whoami
 
 **Recording only happens once a supported coding agent is installed and its hooks are in place.** Setup alone just detects agents and writes hook registrations, it captures nothing on its own. The hook firing when the agent runs is the only trigger, so there's no recording without a supported agent.
 
-Three agents are supported as recording sources: **Claude Code, Codex CLI, and Cursor.** Detection differs:
+Eight agents are supported as recording sources: **Claude Code, Codex CLI, Cursor, Copilot CLI, Gemini CLI, Kiro CLI, Pi, and OpenCode.** Detection mixes `PATH` and user-dir presence:
 
 - **Claude Code** and **Codex CLI** are detected via `PATH`.
-- **Cursor** is detected by user-dir presence (`~/.cursor/`), so IDE-only users without a `cursor` shell command are still covered.
+- **Cursor** via user-dir presence (`~/.cursor/`), so IDE-only users without a `cursor` shell command are still covered.
+- **Copilot** (`~/.copilot/` or `copilot` on PATH), **Gemini** (`~/.gemini/` or `gemini`), **Kiro** (`~/.kiro/` or `kiro`/`kiro-cli`), **Pi** (`~/.pi/` or `pi`), **OpenCode** (`~/.config/opencode/` or `~/.local/share/opencode/` or `opencode`).
 
-PATH detection therefore applies only to Claude and Codex; Cursor is covered by its user directory even when no `cursor` command is on PATH.
+One yes/no prompt is shown per detected agent. Hooks install user-wide, **except Pi and OpenCode**, which expose no shell hooks: kcap installs an in-process extension/plugin (`~/.pi/agent/extensions/kcap.ts`, `~/.config/opencode/plugins/kcap.ts`) that streams each session and shells out to `kcap hook --pi` / `--opencode`, so `kcap` must be on `PATH`.
 
 ### Non-interactive / CI
 
@@ -87,15 +88,13 @@ PATH detection therefore applies only to Claude and Codex; Cursor is covered by 
 kcap setup --server-url https://my-tenant.kcap.ai --no-prompt
 ```
 
-In `--no-prompt` mode the wizard installs hooks for **every detected agent by default.** Opt out per agent with these exact flags (there is no `--only-claude` / `--agents=...`):
+In `--no-prompt` mode the wizard installs hooks for **every detected agent by default.** Opt out per agent with a `--skip-<agent>-hooks` flag (there is no `--only-claude` / `--agents=...`). One flag per agent: `--skip-claude-hooks`, `--skip-codex-hooks`, `--skip-cursor-hooks`, `--skip-copilot-hooks`, `--skip-gemini-hooks`, `--skip-kiro-hooks`, `--skip-pi-hooks`, `--skip-opencode-hooks`. Pass every flag *except* the agent you want:
 
 ```bash
-# Claude hooks only:
-kcap setup --server-url <url> --no-prompt --skip-codex-hooks --skip-cursor-hooks
-# Codex only:
-kcap setup --server-url <url> --no-prompt --skip-claude-hooks --skip-cursor-hooks
-# Cursor only:
-kcap setup --server-url <url> --no-prompt --skip-claude-hooks --skip-codex-hooks
+# Claude hooks only (skip the other seven):
+kcap setup --server-url <url> --no-prompt \
+  --skip-codex-hooks --skip-cursor-hooks --skip-copilot-hooks \
+  --skip-gemini-hooks --skip-kiro-hooks --skip-pi-hooks --skip-opencode-hooks
 ```
 
 Other setup flags: `--daemon-name <name>`, `--default-visibility <private|org_public|public>`, `--device` (force Device Flow login), `--use-provider-api-key <true|false>` (see [config-privacy.md](config-privacy.md)).
@@ -107,9 +106,9 @@ If you run setup outside a git working tree it still completes (user-scope hooks
 ## Login on its own
 
 ```bash
-kcap login            # browser OAuth (localhost callback + PKCE for GitHub)
+kcap login            # browser OAuth; pick email/SSO (WorkOS) or GitHub at discovery
 kcap login --device   # force GitHub Device Flow (SSH / headless / no browser)
-kcap login --discover # discover every Capacitor tenant across your GitHub orgs and save each as a profile
+kcap login --discover # discover every Capacitor tenant you belong to (via email/SSO or GitHub) and save each as a profile
 kcap logout           # delete stored tokens
 ```
 

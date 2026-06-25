@@ -50,7 +50,7 @@ kcap eval --list-questions                # print the question taxonomy and exit
 - **13 questions across 4 categories**: safety, plan adherence, quality, efficiency.
 - **Each question is asked of Claude in its own headless invocation** (a separate judge per question).
 - **The default judge is text-only.** It reasons from the **compacted session trace embedded in its prompt** — the server's eval-context endpoint supplies that trace, and live tools (Read, Bash, Grep, WebFetch, ...) are **blocked**, so the judge works from the evidence in the prompt rather than hitting any service.
-- A **few server-tagged questions instead get a read-only MCP tool surface** (`kcap-review`) to fetch context on demand. Mentioning this is correct but optional; describing "every judge has no tools" is an acceptable simplification.
+- A **few server-tagged questions instead get a read-only MCP tool surface** (the `kcap-judge` server — distinct from the plugin's `kcap-review`) to fetch context on demand. Mentioning this is correct but optional; describing "every judge has no tools" is an acceptable simplification.
 
 Output is **a score per category plus an overall score** — each on a **1-5 scale with a pass / warn / fail verdict** — plus a finding and supporting evidence per question. The aggregate is persisted back to the session's stream as a `SessionEvalCompleted` event, so trends are queryable from the dashboard. Judges run sequentially; expect ~1-3 minutes total.
 

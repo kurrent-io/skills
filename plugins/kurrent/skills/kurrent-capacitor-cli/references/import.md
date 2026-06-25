@@ -2,11 +2,15 @@
 
 ## Backfilling history
 
-`kcap import` discovers and uploads past local transcripts from every detected agent so they appear in the dashboard:
+`kcap import` discovers and uploads past local transcripts from every detected agent so they appear in the dashboard. It walks **seven** agents (`import` covers Claude, Codex, Cursor, Copilot, Gemini, Kiro, Pi; OpenCode is live-ingest only, no historical import):
 
 - Claude, `~/.claude/projects/<encoded-cwd>/<sid>.jsonl`
 - Codex, `~/.codex/sessions/.../rollout-<sid>.jsonl`
 - Cursor, `~/.cursor/projects/<sanitized-workspace>/agent-transcripts/<sid>/<sid>.jsonl`
+- Copilot, `~/.copilot/session-state/<sid>/events.jsonl` (honours `$COPILOT_HOME`)
+- Gemini, `~/.gemini/tmp/<project>/chats/session-<ISO>-<shortId>.jsonl`
+- Kiro, `~/.kiro/sessions/cli/<sid>.jsonl` (honours `$KIRO_HOME`)
+- Pi, `~/.pi/agent/sessions/.../<timestamp>_<sid>.jsonl` (badlogic/pi-mono)
 
 ### A scope is REQUIRED
 
@@ -32,6 +36,8 @@ kcap import --claude --org        # only Claude transcripts
 kcap import --codex  --org        # only Codex rollouts
 kcap import --cursor --all        # only Cursor
 ```
+
+The full set of vendor filters: `--claude`, `--codex`, `--cursor`, `--copilot`, `--gemini`, `--kiro`, `--pi`. Filters are additive — pass several to import that subset.
 
 ### Other flags
 

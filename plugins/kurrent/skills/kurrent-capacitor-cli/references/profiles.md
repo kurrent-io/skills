@@ -12,7 +12,7 @@ kcap profile show work          # defaults to the active profile when name omitt
 kcap profile remove work
 ```
 
-`--remote <pattern>` associates the profile with git-remote patterns and is **repeatable**, pass it multiple times for multiple orgs/hosts.
+`--remote <pattern>` associates the profile with git-remote patterns and is **repeatable**, pass it multiple times for multiple orgs/hosts. `--no-probe` skips the server-reachability check when adding a profile (useful for a server that isn't up yet, or offline).
 
 ### `--remote` wildcard matching
 
@@ -62,6 +62,6 @@ This is why `kcap import --org` works for tenant-bound profiles: `kcap setup` na
 kcap login --discover
 ```
 
-Runs tenant discovery across all your GitHub org memberships, exchanges tokens for each discovered Capacitor tenant, saves them as named profiles, and sets the picked tenant active. No existing profile config is required first.
+Runs tenant discovery across the tenants you belong to (sign in with email/SSO via WorkOS, or with GitHub), exchanges tokens for each discovered Capacitor tenant, saves them as named profiles, and sets the picked tenant active. No existing profile config is required first.
 
 > Profiles are real, named config objects, **do not** suggest per-repo environment variables or a single global config file the user hand-edits as the way to switch servers. Use `profile add` + `--remote` / `kcap use`.

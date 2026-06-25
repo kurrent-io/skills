@@ -3,7 +3,8 @@ name: kurrent-capacitor-cli
 description: >-
   Use when installing, configuring, or operating the kcap CLI, aka the
   Kurrent Capacitor CLI / Capacitor CLI (npm @kurrent/kcap), which records
-  Claude Code, Codex, and Cursor sessions to a Capacitor server. Covers
+  coding-agent sessions (Claude Code, Codex, Cursor, Copilot, Gemini, Kiro,
+  Pi, OpenCode) to a Capacitor server. Covers
   install/setup/login, profiles, where its config and on-disk state live,
   importing and remapping past sessions, recap/eval/errors on a recorded
   session, visibility and privacy (hide, disable, ignoring or excluding
@@ -13,7 +14,7 @@ description: >-
 
 # kcap CLI (Kurrent Capacitor)
 
-`kcap` is the `@kurrent/kcap` npm CLI that records coding-agent sessions (Claude Code, Codex CLI, Cursor) to a Kurrent Capacitor server, then lets you recap, evaluate, and PR-review them with full transcript context. This skill is the source of truth for its commands, flags, config keys, and gotchas, the binary ships from a repo created after the model's training cutoff, so **do not reconstruct command or flag names from memory; copy them from the reference files.**
+`kcap` is the `@kurrent/kcap` npm CLI that records coding-agent sessions (Claude Code, Codex CLI, Cursor, Copilot CLI, Gemini CLI, Kiro CLI, Pi, OpenCode) to a Kurrent Capacitor server, then lets you recap, evaluate, and PR-review them with full transcript context. This skill is the source of truth for its commands, flags, config keys, and gotchas, the binary ships from a repo created after the model's training cutoff, so **do not reconstruct command or flag names from memory; copy them from the reference files.**
 
 ## Overview
 

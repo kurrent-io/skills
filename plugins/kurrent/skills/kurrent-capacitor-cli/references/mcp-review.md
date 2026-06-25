@@ -56,7 +56,7 @@ kcap mcp review --owner <owner> --repo <repo> --pr <number>   # session defaults
 
 ## `kcap mcp judge`
 
-Binds to a session and surfaces judge facts/clusters for that session:
+Binds to a session and exposes six read-only tools for fetching that session's context on demand: `get_session_recap`, `get_session_errors`, `get_session_summary`, `get_transcript`, `search_session`, `get_tool_result`. This is the surface the server-tagged eval judges use (see [sessions.md](sessions.md)).
 
 ```bash
 kcap mcp judge --session <sessionId>

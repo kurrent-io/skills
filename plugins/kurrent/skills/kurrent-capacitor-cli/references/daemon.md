@@ -17,7 +17,22 @@ kcap daemon doctor                  # diagnose lock-file state for every daemon 
 kcap daemon doctor --clean          # also remove stale lock/pid files (held entries untouched)
 ```
 
-Start options: `--name`, `--server-url`, `--max-agents <n>` (default 5), `--log-file <path>`, `-d`/`--detach`.
+Start options: `--name`, `--server-url`, `--max-agents <n>` (default 5), `--log-file <path>`, `--log-level <trace|debug|information|warning|error|critical|none>` (default `information`; also via `KCAP_DAEMON_LOG_LEVEL`, the flag wins; use `debug` for transport diagnostics like DaemonPing RTT), `-d`/`--detach`.
+
+## Run as an OS service
+
+For a daemon that survives logout, auto-restarts on crash/`SIGKILL`, and starts at login, register it as a per-user OS service (launchd on macOS, systemd user unit on Linux, Scheduled Task on Windows) instead of running `daemon start -d` by hand.
+
+```bash
+kcap daemon service install                 # register + start; pins profile, captures PATH
+kcap daemon service install --name laptop --profile work --max-agents 10 --no-start
+kcap daemon service status                  # installed / running state
+kcap daemon service start                   # start an installed (stopped) service
+kcap daemon service stop                    # stop but keep installed
+kcap daemon service uninstall               # stop and remove the unit
+```
+
+`install` pins the profile via `KCAP_PROFILE` and captures your shell `PATH`, so `claude` / `codex` resolve the same way they do interactively. `--no-start` registers without starting. All actions take `--name N` to target a specific daemon name.
 
 ## Running multiple daemons on one machine
 
@@ -49,6 +64,7 @@ Runtime env-var overrides (take precedence over the profile):
 ```bash
 KCAP_CLAUDE_PATH=/opt/claude/bin/claude kcap daemon start
 KCAP_CODEX_PATH=/opt/codex/bin/codex   kcap daemon start
+KCAP_MAX_AGENTS=10                     kcap daemon start   # overrides --max-agents / daemon.max_agents
 ```
 
 Hosted Codex agents require the Codex hook surface (installed by `kcap setup` or `kcap plugin install --codex`, see [plugins.md](plugins.md)). The daemon starts Codex with `--sandbox workspace-write` and `--ask-for-approval on-request`, escalating sensitive operations through the daemon's permission bridge to the dashboard.
@@ -70,5 +86,5 @@ Persisted to `~/.config/kcap/repos.json` and reported to the server on daemon co
 
 ```bash
 kcap cleanup        # kill all orphaned watcher processes
-kcap update         # check for and install CLI updates
+kcap update         # upgrade the CLI and refresh opted-in agent plugins (--check to only report)
 ```
