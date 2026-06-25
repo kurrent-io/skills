@@ -88,5 +88,20 @@
     "query": "How do I give Claude transcript context from past Capacitor sessions when reviewing a PR?",
     "should_trigger": true,
     "note": "mcp-review — kcap review / kcap mcp PR context, references/mcp-review.md"
+  },
+  {
+    "query": "How do I get kcap to record my Gemini CLI sessions into Capacitor?",
+    "should_trigger": true,
+    "note": "install/setup + plugins — newly supported agent (Gemini); kcap now records 8 agents, not just Claude/Codex/Cursor"
+  },
+  {
+    "query": "How do I write a prompt for the Gemini CLI to summarize a file?",
+    "should_trigger": false,
+    "note": "DEFER — using the Gemini CLI itself, not recording it with kcap; guards the new agent-name collision introduced by listing Gemini as a supported vendor"
+  },
+  {
+    "query": "How do I enable GitHub Copilot inline suggestions in VS Code?",
+    "should_trigger": false,
+    "note": "DEFER — Copilot IDE feature, unrelated to kcap session recording; guards the Copilot name collision now that Copilot CLI is a supported vendor"
   }
 ]

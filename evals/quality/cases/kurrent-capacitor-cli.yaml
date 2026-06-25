@@ -7,39 +7,45 @@
       value: >-
         Directs the user to run `kcap setup` (the interactive wizard) and describes
         the steps it covers: entering the server URL (provided by their admin),
-        logging in with GitHub, choosing default visibility, and installing
-        coding-agent hooks. The default GitHub login is browser-based OAuth (localhost
-        callback + PKCE); Device Flow is only the fallback for headless/SSH
-        environments or when `--device` is passed, so an answer that says login opens
-        a browser by default is CORRECT and must not be penalized, and an answer that
-        claims Device Flow is the default is wrong. Mentions verifying with
-        `kcap whoami` and/or `kcap status`. Does NOT invent commands like `kcap init`,
-        `kcap start`, or a config file the user must hand-write.
+        logging in, choosing default visibility, and installing coding-agent hooks.
+        At login the user picks how to sign in — email / SSO (WorkOS) or GitHub — so
+        an answer that mentions either method (or both) is correct; do NOT require it
+        to say GitHub specifically. For the GitHub path, login is browser-based OAuth
+        (localhost callback + PKCE) by default and Device Flow is only the fallback for
+        headless/SSH or when `--device` is passed, so an answer that says GitHub login
+        opens a browser by default is CORRECT and one that claims Device Flow is the
+        default is wrong. Mentions verifying with `kcap whoami` and/or `kcap status`.
+        Does NOT invent commands like `kcap init`, `kcap start`, or a config file the
+        user must hand-write.
     - type: llm-rubric
       value: >-
-        Notes that recording only happens once a supported coding agent (Claude Code,
-        Codex CLI, or Cursor) is installed and its hooks are in place. Setup alone,
-        which just detects agents and writes hook registrations, captures nothing. The
-        hook firing when the agent runs is the only trigger, so there is no recording
-        without a supported agent. Accepts (does not penalize) answers that mention
-        only Claude Code and/or Codex, but treats naming Codex CLI as the sole second
-        agent (omitting Cursor) as incomplete rather than correct. Does not require the
-        phrase "on PATH": detection is PATH-based for Claude and Codex but
-        directory-based for Cursor, so an answer that hinges recording solely on an
-        agent being "on PATH" is imprecise.
+        Notes that recording only happens once a supported coding agent is installed
+        and its hooks are in place. The supported agents are Claude Code, Codex CLI,
+        Cursor, Copilot CLI, Gemini CLI, Kiro CLI, Pi, and OpenCode; since the user
+        asked about Claude Code, an answer focused on Claude Code is fine and need not
+        enumerate the rest. Setup alone, which just detects agents and writes hook
+        registrations, captures nothing. The hook firing when the agent runs is the
+        only trigger, so there is no recording without a supported agent. Does not
+        require the phrase "on PATH": detection is PATH-based for some agents but
+        directory-based for others (e.g. Cursor via `~/.cursor/`), so an answer that
+        hinges recording solely on an agent being "on PATH" is imprecise.
 
 - description: "[setup] Non-interactive setup, Claude hooks only"
   vars:
     skill: kurrent-capacitor-cli
-    message: "How do I run kcap setup in CI with no prompts, installing only the Claude Code hooks and skipping Codex and Cursor?"
+    message: "How do I run kcap setup in CI with no prompts, installing only the Claude Code hooks and no other agents?"
   assert:
     - type: llm-rubric
       value: >-
         Shows `kcap setup --server-url <url> --no-prompt` and explains that
-        `--no-prompt` installs hooks for EVERY detected agent by default, so you must
-        opt out of the others with `--skip-codex-hooks` and `--skip-cursor-hooks` to
-        get Claude-only. Uses these exact opt-out flags (not invented ones like
-        `--only-claude` or `--agents=claude`).
+        `--no-prompt` installs hooks for EVERY detected agent by default, so to get
+        Claude-only you must opt out of every other agent with its `--skip-<agent>-hooks`
+        flag: `--skip-codex-hooks`, `--skip-cursor-hooks`, `--skip-copilot-hooks`,
+        `--skip-gemini-hooks`, `--skip-kiro-hooks`, `--skip-pi-hooks`, and
+        `--skip-opencode-hooks`. Uses these `--skip-*-hooks` opt-out flags (not invented
+        ones like `--only-claude` or `--agents=claude`). An answer that only skips Codex
+        and Cursor, leaving the newer agents (Copilot/Gemini/Kiro/Pi/OpenCode)
+        installable, is incomplete.
 
 - description: "[import] Backfilling past sessions requires an explicit scope"
   vars:

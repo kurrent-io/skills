@@ -21,7 +21,7 @@ Start options: `--name`, `--server-url`, `--max-agents <n>` (default 5), `--log-
 
 ## Run as an OS service
 
-For a daemon that survives logout, auto-restarts on crash/`SIGKILL`, and starts at login, register it as a per-user OS service (launchd on macOS, systemd user unit on Linux, Scheduled Task on Windows) instead of running `daemon start -d` by hand.
+`kcap daemon service` registers the daemon as a per-user OS service (launchd on macOS, systemd user unit on Linux, Scheduled Task on Windows). A service-managed daemon survives logout, auto-restarts on crash/`SIGKILL`, and starts at login — unlike a manual `daemon start -d`, which runs only until logout/reboot.
 
 ```bash
 kcap daemon service install                 # register + start; pins profile, captures PATH

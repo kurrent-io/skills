@@ -22,7 +22,7 @@ The CLI splits into a few concerns. Match the user's need to a reference file be
 
 **Key surfaces:**
 
-- **Onboarding**: `kcap setup` (one wizard: server URL, GitHub login, visibility, agent hooks, daemon name), then verify with `kcap status` / `kcap whoami`.
+- **Onboarding**: `kcap setup` (one wizard: server URL, login via email/SSO or GitHub, visibility, agent hooks, daemon name), then verify with `kcap status` / `kcap whoami`.
 - **Recording**: once an agent's hooks are installed, sessions stream automatically; nothing else to run.
 - **Profiles**: one server config each (URL, visibility, daemon, ignore list); auto-switch by git remote.
 - **History**: `kcap import` backfills past local transcripts; requires an explicit scope.
@@ -43,11 +43,15 @@ Pick the one file that owns the user's need. Don't load more than you need.
 | Where the config file lives (`$HOME/.config/kcap/config.json`) and the `KCAP_CONFIG_DIR` override, `kcap config show` / `set`, config keys, default visibility, excluding repos vs paths (`excluded_repos` / `kcap ignore`), provider-API-key scrubbing, SessionStart guidance injection | [`references/config-privacy.md`](references/config-privacy.md) |
 | `kcap daemon` lifecycle, running multiple daemons (naming / flock), hosted Claude/Codex agents, `daemon.claude_path` / `daemon.codex_path`, `kcap repos`, daemon env vars                                               | [`references/daemon.md`](references/daemon.md)                 |
 | Giving an agent session/PR context: `kcap mcp sessions` / `review` / `judge`, `kcap review <pr>`, auto-registration, the MCP tools                                                                                      | [`references/mcp-review.md`](references/mcp-review.md)         |
-| `kcap plugin install` / `remove` (hooks + skills) for Claude / Codex / Cursor, `--project` vs user scope, `--skills`, `--if-installed`, and `kcap uninstall`                                                            | [`references/plugins.md`](references/plugins.md)               |
+| `kcap plugin install` / `remove` (hooks + skills) for each supported agent (Claude, Codex, Cursor, Copilot, Gemini, Kiro, Pi, OpenCode), `--project` vs user scope, `--skills`, `--if-installed`, and `kcap uninstall`                                                            | [`references/plugins.md`](references/plugins.md)               |
 
 ## Switching profiles
 
 **Before running `kcap use` to switch profiles, ask whether to bind it to this repo only (the no-flag default) or globally (`--global`).** A no-flag `kcap use` silently creates a repo-scoped binding that overrides the global active profile for that directory, so choosing scope for the user can quietly reroute one repo while the rest stay on the old profile. Surface the choice; don't assume. See [`references/profiles.md`](references/profiles.md) for the binding mechanics and resolution order.
+
+## Running the daemon persistently
+
+**When the user wants the daemon to stay up (survive logout/reboot, restart on crash), recommend `kcap daemon service install` over `kcap daemon start -d`.** The detached `-d` form runs only until logout or reboot; the service form is OS-managed. See [`references/daemon.md`](references/daemon.md).
 
 ## Quick Reference
 
