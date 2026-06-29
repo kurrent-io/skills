@@ -29,6 +29,36 @@ The CLI splits into a few concerns. Match the user's need to a reference file be
 - **Agents for daemon/MCP**: `kcap daemon` runs hosted agents from the dashboard; `kcap mcp ...` and `kcap review` give agents transcript context.
 - **Privacy**: `excluded_repos`, `kcap ignore`, and default visibility keep sensitive work off the server.
 
+## Quick start
+
+**`kcap setup` isn't interactive-only. Run it yourself with flags; don't punt to `! kcap setup` in a terminal.** Only the GitHub OAuth needs the user (browser, or device code on headless).
+
+```bash
+npm install -g @kurrent/kcap # works even if the npm allow-scripts warning fires
+```
+
+**Branch first: does the user have a Capacitor server? Don't assume. Nothing records without one.**
+
+- **Has a URL** (e.g. `https://my-tenant.kcap.ai`, from their admin): skip to setup.
+- **URL unknown:** run `kcap login --discover` (does GitHub login, finds any tenant their orgs already have, no prior config).
+  - Finds one: saves + activates a profile. Run setup without `--server-url`.
+  - **Finds nothing:** pre-signup, no server. Stop. Send them to https://capacitor.kurrent.io/signup/new to sign up and get their own server, then resume with that URL. Don't invent a server hostname or run setup without one.
+
+**Setup is required — then ask y/n on each recommended extra. Don't auto-run, don't silently skip.**
+
+```bash
+kcap setup --server-url <url> --no-prompt # hooks for every detected agent — --skip-{claude,codex,cursor}-hooks to opt out — --device for headless login
+```
+
+Recording starts here once hooks land.
+
+- **Backfill past sessions** (recommended). If yes, ask scope first (no safe default, can upload private repos), then `kcap import <scope> --yes` (`--repo .`, `--org`, or `--all`).
+- **Start the daemon** (recommended for dashboard-launched hosted agents - not needed for plain recording). If yes, `kcap daemon start -d`.
+
+Verify: `kcap status` (server / auth / hooks / daemon), `kcap whoami`.
+
+Flags + allow-scripts: [`references/install-setup.md`](references/install-setup.md). Import scopes: [`references/import.md`](references/import.md). Daemon: [`references/daemon.md`](references/daemon.md).
+
 ## Routing
 
 Pick the one file that owns the user's need. Don't load more than you need.
@@ -51,11 +81,7 @@ Pick the one file that owns the user's need. Don't load more than you need.
 ## Quick Reference
 
 ```bash
-# First run
-npm install -g @kurrent/kcap        # native binary ships as a platform optional-dependency
-kcap setup                          # server URL, login, visibility, agent hooks, daemon
-kcap status                         # server / auth / hooks / daemon health
-kcap whoami
+# Install & first-run setup → see "Quick start" above
 
 # Backfill past sessions (scope is REQUIRED)
 kcap import --org                   # repos owned by the active profile's org
