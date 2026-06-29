@@ -41,6 +41,52 @@
         get Claude-only. Uses these exact opt-out flags (not invented ones like
         `--only-claude` or `--agents=claude`).
 
+- description: "[quickstart] Agent drives the post-signup install non-interactively"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "Get kcap recording in this repo for me — I already have our Capacitor server URL from my admin. Set it up yourself, I don't want to run an interactive wizard by hand."
+  assert:
+    - type: llm-rubric
+      value: >-
+        Drives the install itself with `kcap setup --server-url <url> --no-prompt`
+        rather than telling the user to go run `! kcap setup` / an interactive wizard
+        in their own terminal. Recognizes the one step it cannot do for them is the
+        GitHub OAuth (browser by default, or `--device` for a headless device code).
+        Does NOT claim `kcap setup` is interactive-only or refuse to proceed. May note
+        `--skip-{claude,codex,cursor}-hooks` to limit which agents get hooks.
+    - type: llm-rubric
+      value: >-
+        Treats backfilling history (`kcap import`) and starting the daemon
+        (`kcap daemon start -d`) as OPTIONAL-but-RECOMMENDED extras and offers the user
+        the choice on each (asks yes/no, or clearly presents them as recommended next
+        steps to confirm) rather than silently running both or omitting them. For
+        import, surfaces the scope choice (`--repo .` / `--org` / `--all`) instead of
+        defaulting to `--all`, since import has no safe default and can upload private
+        repos, and uses `--yes` for the non-interactive run. Frames the daemon as for
+        dashboard-launched hosted agents, not required for plain recording. Verifies
+        with `kcap status` and/or `kcap whoami`.
+
+- description: "[quickstart] Brand-new user with no server is guided to sign up, not fabricated a URL"
+  vars:
+    skill: kurrent-capacitor-cli
+    message: "Can you install and set kcap up on my machine? I've never used it before and I don't have any account or server yet."
+  assert:
+    - type: llm-rubric
+      value: >-
+        Installs the CLI (`npm install -g @kurrent/kcap`) but makes clear kcap needs a
+        Capacitor server (server URL) before anything records. To find one, either runs
+        `kcap login --discover` (which logs in via GitHub and detects any tenant the
+        user's orgs already have, no prior config) or asks the user for their server
+        URL. If no server exists, directs the user to sign up for / obtain a Capacitor
+        server and does NOT run `kcap setup` without a URL.
+    - type: llm-rubric
+      value: >-
+        Directs the user to the Capacitor signup page
+        (https://capacitor.kurrent.io/signup/new) to create an account and get their
+        own server. Does NOT invent a different signup URL, a server hostname / tenant
+        URL (that comes from signup, not guessed), or a `kcap signup` / `kcap register`
+        subcommand. Conveys that nothing is recorded until a server is configured.
+
 - description: "[import] Backfilling past sessions requires an explicit scope"
   vars:
     skill: kurrent-capacitor-cli

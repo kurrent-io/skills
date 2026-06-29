@@ -53,7 +53,7 @@ kcap setup
 
 Walks through these steps, in order:
 
-1. **Server URL** — provided by your admin, e.g. `https://my-tenant.kcap.ai`.
+1. **Server URL** — provided by your admin (e.g. `https://my-tenant.kcap.ai`), or sign up at https://capacitor.kurrent.io/signup/new to get your own.
 2. **Login** — GitHub, browser/PKCE by default, falls back to Device Flow.
 3. **Default visibility** — `private` / `org_public` / `public`; the dashboard-visibility default applied to new sessions.
 4. **Coding-agent hooks** — one yes/no per detected agent (Claude Code / Codex CLI / Cursor).
