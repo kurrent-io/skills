@@ -118,27 +118,6 @@ Cursor installs this repo as a team marketplace straight from GitHub (Cursor 2.6
 </details>
 
 <details>
-<summary><strong>skills.sh — scoped installs and CI</strong></summary>
-
-[skills.sh](https://github.com/vercel-labs/skills) also does targeted installs.
-
-1. List the skills in this repo:
-
-   ```bash
-   npx skills add kurrent-io/skills --list
-   ```
-
-2. Install one skill into a specific agent — for example, Claude Code globally:
-
-   ```bash
-   npx skills add kurrent-io/skills --skill kurrent-docs -a claude-code -g
-   ```
-
-Pass `-y` for non-interactive installs in CI.
-
-</details>
-
-<details>
 <summary><strong>Local install from repository</strong></summary>
 
 1. Clone the repository:
