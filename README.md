@@ -33,26 +33,24 @@ Behavioural runtime verification belongs to the project's own integration tests.
 
 ## Installation
 
-<details>
-<summary><strong>Claude Code</strong></summary>
+Pick your agent:
 
-Run the following commands from a Claude Code session:
+- **Claude Code** — full plugin, all six skills plus the three agents:
 
-1. Add the marketplace:
+  ```bash
+  /plugin marketplace add kurrent-io/skills
+  /plugin install kurrent@kurrent-skills
+  ```
 
-   ```bash
-   /plugin marketplace add kurrent-io/skills
-   ```
+  Then run `/reload-plugins` to activate it.
 
-2. Install the plugin:
+- **Any other agent** — skills only, via [skills.sh](https://github.com/vercel-labs/skills), which auto-detects Cursor, Cline, opencode, Windsurf, and 70+ others:
 
-   ```bash
-   /plugin install kurrent@kurrent-skills
-   ```
+  ```bash
+  npx skills add kurrent-io/skills --all
+  ```
 
-3. Follow the prompts to complete the installation, then run `/reload-plugins` to activate it.
-
-</details>
+Cursor, Codex, and GitHub Copilot CLI also have native installs below (Copilot's installs the agents too). skills.sh installs skills only, not the three agents.
 
 <details>
 <summary><strong>Cursor</strong></summary>
@@ -120,31 +118,23 @@ Cursor installs this repo as a team marketplace straight from GitHub (Cursor 2.6
 </details>
 
 <details>
-<summary><strong>Skills.sh</strong></summary>
+<summary><strong>skills.sh</strong></summary>
 
-Works with Claude Code, Cursor, Cline, opencode, and any other agent the [Vercel skills CLI](https://github.com/vercel-labs/skills) supports. The CLI auto-detects installed agents and links each skill into the right place.
+[skills.sh](https://github.com/vercel-labs/skills) also does targeted installs.
 
-1. List the skills available in this repo:
+1. List the skills in this repo:
 
    ```bash
    npx skills add kurrent-io/skills --list
    ```
 
-2. Install everything to every detected agent:
+2. Install one skill into a specific agent, e.g. Claude Code globally:
 
    ```bash
-   npx skills add kurrent-io/skills --all
+   npx skills add kurrent-io/skills --skill kurrent-docs -a claude-code -g
    ```
 
-3. Or install the skill into a specific agent — for example, into Claude Code globally:
-
-   ```bash
-   npx skills add kurrent-io/skills \
-     --skill kurrent-docs \
-     -a claude-code -g
-   ```
-
-   Pass `-y` for non-interactive installs in CI.
+Pass `-y` for non-interactive installs in CI.
 
 </details>
 
