@@ -132,3 +132,25 @@
   assert:
     - type: llm-rubric
       value: "Recommends VPC peering between the customer AWS VPC and the Kurrent Cloud private network, provisioned from the Cloud console or via the Terraform/Pulumi provider. May acknowledge that AWS PrivateLink / GCP Private Service Connect / Azure Private Link are on the roadmap but not yet supported. Does NOT suggest self-hosting or a public-internet workaround as the recommended solution."
+
+- description: "[database] Kubernetes Operator install via Helm"
+  vars:
+    skill: kurrent-docs
+    message: "How do I install the KurrentDB Kubernetes Operator?"
+  assert:
+    - type: llm-rubric
+      value: "Installs via Helm: adds the Kurrent Helm repository (packages.kurrent.io) and runs `helm install` for the `kurrentdb-operator` chart into a dedicated namespace, supplying the Operator license (e.g. `--set-file operator.license.key=` / `operator.license.file=`). Notes the Operator is an Enterprise-only feature that requires a license. May also mention OpenShift/OperatorHub or OLM as alternative install paths. Does NOT invent a generic community operator or a plain `kubectl apply` of an unnamed manifest as the primary method."
+
+- description: "[database] Kubernetes Operator KurrentDB custom resource"
+  vars:
+    skill: kurrent-docs
+    message: "Show me a KurrentDB custom resource to deploy a 3-node cluster with the Operator."
+  assert:
+    - type: llm-rubric
+      value: >-
+        Provides a `KurrentDB` custom resource using the `kubernetes.kurrent.io/v1`
+        apiVersion and `kind: KurrentDB`, with the required spec fields
+        (`replicas` set to 3, `image`, `resources`, `storage`, and `network`).
+        Uses the modern `KurrentDB` kind, NOT an `EventStoreDB`-branded resource.
+    - type: llm-rubric
+      value: "Applies the resource with `kubectl` into a namespace and mentions configuring initial admin/ops user passwords (the deployment is not secure with default passwords). Enabling TLS/security is recommended rather than left implicitly off."
