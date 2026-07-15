@@ -15,15 +15,15 @@ import { readFileSync, writeFileSync } from "node:fs";
 // A file may carry the version in more than one place (marketplace manifests
 // repeat it under .metadata and per-plugin).
 const TARGETS = [
-  { file: "plugin.json", paths: ["version"] },
-  { file: ".claude-plugin/plugin.json", paths: ["version"] },
+  { file: "plugins/kurrent/plugin.json", paths: ["version"] },
+  { file: "plugins/kurrent/.claude-plugin/plugin.json", paths: ["version"] },
+  { file: "plugins/kurrent/.cursor-plugin/plugin.json", paths: ["version"] },
+  { file: "plugins/kurrent/.codex-plugin/plugin.json", paths: ["version"] },
   { file: ".claude-plugin/marketplace.json", paths: ["version"] },
-  { file: ".cursor-plugin/plugin.json", paths: ["version"] },
   {
     file: ".cursor-plugin/marketplace.json",
     paths: ["metadata.version", "plugins.0.version"],
   },
-  { file: ".codex-plugin/plugin.json", paths: ["version"] },
   {
     file: ".github/plugin/marketplace.json",
     paths: ["metadata.version", "plugins.0.version"],

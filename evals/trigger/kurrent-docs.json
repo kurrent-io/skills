@@ -95,6 +95,31 @@
     "note": "cloud — references/cloud/guides/tailscale.md"
   },
   {
+    "query": "Deploy a 3-node KurrentDB cluster on my EKS cluster using the Operator",
+    "should_trigger": true,
+    "note": "database — Kubernetes Operator deployment, references/database/kubernetes-operator/operations/database-deployment.md"
+  },
+  {
+    "query": "Install the KurrentDB Operator on Kubernetes with Helm",
+    "should_trigger": true,
+    "note": "database — Operator install, references/database/kubernetes-operator/getting-started/installation.md"
+  },
+  {
+    "query": "What fields go in a KurrentDB custom resource to run a database under the operator?",
+    "should_trigger": true,
+    "note": "database — Operator CRD/spec reference, references/database/kubernetes-operator/getting-started/resource-types.md"
+  },
+  {
+    "query": "Set up scheduled backups and retention for my operator-managed KurrentDB cluster",
+    "should_trigger": true,
+    "note": "database — Operator backups, references/database/kubernetes-operator/operations/database-backup.md"
+  },
+  {
+    "query": "How do I build a custom Kubernetes operator in Go with controller-runtime?",
+    "should_trigger": false,
+    "note": "out of scope — generic Kubernetes operator development, not the KurrentDB Operator"
+  },
+  {
     "query": "Write a Python script that parses CSV files into a pandas DataFrame",
     "should_trigger": false,
     "note": "out of scope — no KurrentDB involvement, generic Python data wrangling"

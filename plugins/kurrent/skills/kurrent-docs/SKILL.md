@@ -21,11 +21,11 @@ Some requests belong to a more specialized skill. Check these first; defer if on
 
 ## Pick a domain
 
-| User need                                                                                                                                                                                  | Action                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| Application code calling KurrentDB from **.NET, Java, Node.js, Python, Go, or Rust**: `AppendToStream`, `SubscribeToAll`, `EventData`, catch-up vs persistent subscriptions, gRPC errors   | Go to [Client SDKs](#client-sdks)                     |
-| The **self-hosted KurrentDB server** itself: install/upgrade, config flags, TLS, ACLs, `/admin/logs`, `/metrics`, scavenge, projections, indexes, HTTP API, connectors (Kafka/Mongo/SQL/…) | Go to [Database (self-hosted)](#database-self-hosted) |
-| **Kurrent Cloud**: `console.kurrent.cloud`, VPC/VNet peering, Tailscale, K8s connectivity, sizing, backups, Cloud-side Terraform/Pulumi, CloudWatch/Opsgenie/Slack integrations            | Go to [Cloud](#cloud)                                 |
+| User need                                                                                                                                                                                                                          | Action                                                |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Application code calling KurrentDB from **.NET, Java, Node.js, Python, Go, or Rust**: `AppendToStream`, `SubscribeToAll`, `EventData`, catch-up vs persistent subscriptions, gRPC errors                                           | Go to [Client SDKs](#client-sdks)                     |
+| The **self-hosted KurrentDB server** itself: install/upgrade, config flags, running on Kubernetes via the Operator, TLS, ACLs, `/admin/logs`, `/metrics`, scavenge, projections, indexes, HTTP API, connectors (Kafka/Mongo/SQL/…) | Go to [Database (self-hosted)](#database-self-hosted) |
+| **Kurrent Cloud**: `console.kurrent.cloud`, VPC/VNet peering, Tailscale, K8s connectivity, sizing, backups, Cloud-side Terraform/Pulumi, CloudWatch/Opsgenie/Slack integrations                                                    | Go to [Cloud](#cloud)                                 |
 
 ## Client SDKs
 
@@ -59,6 +59,20 @@ Files live at `references/database/`. This is everything about the KurrentDB ser
 | Per-version changelog                                             | Read `release-schedule/release-notes.md`     |
 | Support windows, EOL dates                                        | Read `release-schedule/previous-versions.md` |
 | What the binary phones home, opting out                           | Read `usage-telemetry.md`                    |
+
+### Kubernetes Operator
+
+Running the self-hosted server on Kubernetes via the KurrentDB Operator (an Enterprise-only feature). Files live under `kubernetes-operator/`, tracking the latest Operator release.
+
+| User need                                                                                         | Action                                                         |
+| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Installing the Operator via Helm, OpenShift/OperatorHub, or OLM                                   | Read `kubernetes-operator/getting-started/installation.md`     |
+| CRD/spec reference for `KurrentDB`, `KurrentDBBackup`, `KurrentDBBackupSchedule`                  | Read `kubernetes-operator/getting-started/resource-types.md`   |
+| Deploying a cluster: production settings, secure/insecure examples, read-only replicas, archiver  | Read `kubernetes-operator/operations/database-deployment.md`   |
+| Changing a live cluster: image/CPU/memory/disk/replica updates, scaling, reload/restart triggers  | Read `kubernetes-operator/operations/modify-deployments.md`    |
+| Backups and restore: volume snapshots, scheduled backups, retention, restoring via `sourceBackup` | Read `kubernetes-operator/operations/database-backup.md`       |
+| TLS certificates: cert-manager, LetsEncrypt, FQDN templates, wiring certs via secrets             | Read `kubernetes-operator/operations/managing-certificates.md` |
+| Advertised addresses and traffic strategy (`ServiceName`/`FQDN`/`SplitDNS`), network security     | Read `kubernetes-operator/operations/advanced-networking.md`   |
 
 ### Configuration
 
@@ -213,13 +227,13 @@ Kurrent Cloud. Files at `references/cloud/`.
 
 Some terms map to a client-SDK file or a server/cloud file depending on whether the user is writing app code or operating the cluster. Disambiguate by that, then route.
 
-| User need                      | App code (Client SDKs)                                                                       | Server / operations                                                                                                                 |
-| ------------------------------ | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| **"Subscribe to events"**      | `<lang>/subscriptions.md` (catch-up), `<lang>/persistent-subscriptions.md` (consumer groups) | As a server-side bridge into Kafka/Mongo/SQL/etc., Database `features/connectors/`                                                  |
-| **"Projections"**              | `<lang>/projections.md` (read/create from the client)                                        | Configuring server projections, JS bodies, engine tuning: Database `features/projections/`                                          |
-| **"Persistent subscriptions"** | `<lang>/persistent-subscriptions.md` (consume from one)                                      | Operating the server side (groups, parking, settings): Database `features/persistent-subscriptions.md`                              |
-| **"Indexes"**                  | (none; see `kurrentdb-index-queries` for user-defined)                                       | What they are server-side (storage, build, config): Database `features/indexes/secondary.md`                                        |
-| **"Provision a cluster"**      | (none)                                                                                       | Managed: Cloud `getting-started/` + `automation/`. Self-hosted: Database `quick-start/installation.md` + `configuration/cluster.md` |
+| User need                      | App code (Client SDKs)                                                                       | Server / operations                                                                                                                                                                 |
+| ------------------------------ | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **"Subscribe to events"**      | `<lang>/subscriptions.md` (catch-up), `<lang>/persistent-subscriptions.md` (consumer groups) | As a server-side bridge into Kafka/Mongo/SQL/etc., Database `features/connectors/`                                                                                                  |
+| **"Projections"**              | `<lang>/projections.md` (read/create from the client)                                        | Configuring server projections, JS bodies, engine tuning: Database `features/projections/`                                                                                          |
+| **"Persistent subscriptions"** | `<lang>/persistent-subscriptions.md` (consume from one)                                      | Operating the server side (groups, parking, settings): Database `features/persistent-subscriptions.md`                                                                              |
+| **"Indexes"**                  | (none; see `kurrentdb-index-queries` for user-defined)                                       | What they are server-side (storage, build, config): Database `features/indexes/secondary.md`                                                                                        |
+| **"Provision a cluster"**      | (none)                                                                                       | Managed: Cloud `getting-started/` + `automation/`. Self-hosted: Database `quick-start/installation.md` + `configuration/cluster.md`. On Kubernetes: Database `kubernetes-operator/` |
 
 A request can genuinely span domains (e.g. a .NET app reading from a peered Cloud cluster). Load files from both in parallel; the tables don't overlap, so it's cheap.
 

@@ -22,6 +22,10 @@
         {
           "pattern": "docs/cloud/**/*.md",
           "target": "plugins/kurrent/skills/kurrent-docs/references/cloud"
+        },
+        {
+          "pattern": "docs/server/kubernetes-operator/v1.6.0/**/*.md",
+          "target": "plugins/kurrent/skills/kurrent-docs/references/database/kubernetes-operator"
         }
       ]
     },
